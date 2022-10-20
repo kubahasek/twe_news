@@ -1,0 +1,22 @@
+{
+  "name": "php_news",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "tailwind": "npx tailwindcss -i input.css -o output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kubahasek/twe_news.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kubahasek/twe_news/issues"
+  },
+  "homepage": "https://github.com/kubahasek/twe_news#readme",
+  "dependencies": {
+    "tailwindcss": "^3.2.0"
+  }
+}
