@@ -18,12 +18,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Databáze: `news2022`
---
-CREATE DATABASE IF NOT EXISTS `news2022` DEFAULT CHARACTER SET utf8 COLLATE utf8_czech_ci;
-USE `news2022`;
-
 -- --------------------------------------------------------
 
 --
