@@ -47,7 +47,7 @@
         <h1 class="text-white text-5xl uppercase font-bold">Kategorie</h1>
         <?php foreach($categories as $c): ?>
         <div>
-        <h1 class="text-3xl"><a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?id=<?= $c["id"] ?>"><?= $c["name"] ?></a> - <?= $c["numOfArticles"] ?> <?= $c["numOfArticles"] > 1 ? "články" : "článek" ?></h1>
+        <h1 class="text-3xl"><a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?catId=<?= $c["id"] ?>"><?= $c["name"] ?></a> - <?= $c["numOfArticles"] ?> <?= $c["numOfArticles"] > 1 ? "články" : "článek" ?></h1>
         </div>
         <?php endforeach; ?>
   </main>

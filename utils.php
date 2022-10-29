@@ -26,3 +26,22 @@ function getCategories(){
                 GROUP BY c.id";
         return run($sql);
 }
+
+function getArticlesForCategory(int $id) {
+        $sql = "
+        SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, GROUP_CONCAT(c.name) as catName, GROUP_CONCAT(c.id) as catId, a.id as authorId FROM article ar
+        INNER JOIN author a on ar.author_id = a.id
+        INNER JOIN article_category ac on ar.id = ac.article_id
+        INNER JOIN category c on ac.category_id = c.id
+        WHERE c.id = :id
+        GROUP BY ar.id
+        ";
+        $data = [ "id" => $id, ];
+        return run($sql, $data);
+}
+
+function getCategoryName(int $id) {
+        $sql = "SELECT name FROM category where id = :id";
+        $data = [ "id" => $id, ];
+        return run($sql, $data);
+}

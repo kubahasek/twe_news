@@ -5,10 +5,14 @@
     <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.3/dist/flowbite.min.css" />
     <link rel="stylesheet" href="output.css">
     <title>The #1 trusted news source!</title>
-</head>
+</head> 
 <?php 
         require "utils.php";
         $articles = getArticles();
+        if(isset($_GET["catId"])) {
+                $articles = getArticlesForCategory($_GET["catId"]);
+                $catName = getCategoryName($_GET["catId"]);
+        }
 ?>
 <body class="bg-dark text-white">
   <!-- colors: https://coolors.co/2e3532-ffbf00-c9c5cb-648767-7f2ccb -->
@@ -44,14 +48,14 @@
   </nav>
   <main>
     <div class="container mx-auto mt-5 md:p-0 px-2">
-      <h1 class="text-white text-5xl uppercase font-bold">Články</h1>
+    <h1 class="text-white text-5xl uppercase font-bold">Články <?= isset($_GET["catId"]) ? "v ".$catName[0]["name"] : "" ?></h1>
         <p class="text-gray-500">Nejnovější zprávy z IT</p>
         <div class="mt-5 flex flex-col gap-4 md:m-0 mx-auto w-[90%] md:w-[70%]">
                 <?php foreach($articles as $a): ?>
                         <article>
                                 <div class="flex gap-2">
                                         <?php foreach(explode(",", $a["catName"]) as $key => $catName): ?>
-                                                <a class="cursor-pointer text-yellow underline" href="category.php?id=<?= explode(",", $a["catId"])[$key] ?>"><p><?= $catName ?></a>
+                                                <a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?catId=<?= explode(",", $a["catId"])[$key] ?>"><p><?= $catName ?></a>
                                         <?php endforeach; ?>
                                 </div>
                                 <a href="article.php?id=<?= $a["id"] ?>"><h1 class="text-5xl mb-4 text-yellow hover:cursor-pointer"><?= $a["title"] ?></h1></a>
