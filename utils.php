@@ -18,3 +18,11 @@ function getArticles(): array {
         ";
         return run($sql);
 }
+
+function getCategories(){
+        $sql = "SELECT c.*, count(a.id) as numOfArticles FROM category c 
+                INNER JOIN article_category ac on c.id = ac.category_id
+                INNER JOIN article a ON ac.article_id = a.id
+                GROUP BY c.id";
+        return run($sql);
+}
