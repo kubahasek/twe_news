@@ -45,3 +45,22 @@ function getCategoryName(int $id) {
         $data = [ "id" => $id, ];
         return run($sql, $data);
 }
+
+function getArticlesForAuthor(int $id) {
+        $sql = "
+        SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, GROUP_CONCAT(c.name) as catName, GROUP_CONCAT(c.id) as catId, a.id as authorId FROM article ar
+        INNER JOIN author a on ar.author_id = a.id
+        INNER JOIN article_category ac on ar.id = ac.article_id
+        INNER JOIN category c on ac.category_id = c.id
+        WHERE a.id = :id
+        GROUP BY ar.id
+        ";
+        $data = [ "id" => $id, ];
+        return run($sql, $data);
+}
+
+function getAuthorName(int $id) {
+        $sql = "SELECT concat(name, ' ', surname) as name FROM author WHERE id = :id";
+        $data = [ "id" => $id, ];
+        return run($sql, $data);
+}
