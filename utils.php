@@ -1,13 +1,15 @@
 <?php
 
-function run($sql, $data = []){
+function run($sql, $data = [])
+{
         require "db.php";
-        $stmt = $conn -> prepare($sql);
-        $stmt -> execute($data);
-        return $stmt -> fetchAll();
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($data);
+        return $stmt->fetchAll();
 }
 
-function getArticles(): array {
+function getArticles(): array
+{
         $sql = "
         SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, GROUP_CONCAT(c.name) as catName, GROUP_CONCAT(c.id) as catId, a.id as authorId FROM article ar
         INNER JOIN author a on ar.author_id = a.id
@@ -19,7 +21,8 @@ function getArticles(): array {
         return run($sql);
 }
 
-function getCategories(){
+function getCategories()
+{
         $sql = "SELECT c.*, count(a.id) as numOfArticles FROM category c 
                 INNER JOIN article_category ac on c.id = ac.category_id
                 INNER JOIN article a ON ac.article_id = a.id
@@ -27,7 +30,8 @@ function getCategories(){
         return run($sql);
 }
 
-function getArticlesForCategory(int $id) {
+function getArticlesForCategory(int $id)
+{
         $sql = "
         SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, GROUP_CONCAT(c.name) as catName, GROUP_CONCAT(c.id) as catId, a.id as authorId FROM article ar
         INNER JOIN author a on ar.author_id = a.id
@@ -36,17 +40,19 @@ function getArticlesForCategory(int $id) {
         WHERE c.id = :id
         GROUP BY ar.id
         ";
-        $data = [ "id" => $id, ];
+        $data = ["id" => $id,];
         return run($sql, $data);
 }
 
-function getCategoryName(int $id) {
+function getCategoryName(int $id)
+{
         $sql = "SELECT name FROM category where id = :id";
-        $data = [ "id" => $id, ];
+        $data = ["id" => $id,];
         return run($sql, $data);
 }
 
-function getArticlesForAuthor(int $id) {
+function getArticlesForAuthor(int $id)
+{
         $sql = "
         SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, GROUP_CONCAT(c.name) as catName, GROUP_CONCAT(c.id) as catId, a.id as authorId FROM article ar
         INNER JOIN author a on ar.author_id = a.id
@@ -55,12 +61,21 @@ function getArticlesForAuthor(int $id) {
         WHERE a.id = :id
         GROUP BY ar.id
         ";
-        $data = [ "id" => $id, ];
+        $data = ["id" => $id,];
         return run($sql, $data);
 }
 
-function getAuthorName(int $id) {
+function getAuthorName(int $id)
+{
         $sql = "SELECT concat(name, ' ', surname) as name FROM author WHERE id = :id";
-        $data = [ "id" => $id, ];
+        $data = ["id" => $id,];
         return run($sql, $data);
+}
+
+function getAuthors()
+{
+        $sql = "SELECT concat(a.name, ' ', a.surname) as authorName, a.id as authorId, count(ar.id) as numOfArticles FROM author a
+                INNER JOIN article ar on a.id = ar.author_id 
+                ";
+        return run($sql);
 }

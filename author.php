@@ -9,7 +9,7 @@
 </head>
 <?php
 require "utils.php";
-$categories = getCategories();
+$authors = getAuthors();
 ?>
 
 <body class="bg-dark text-white">
@@ -28,10 +28,10 @@ $categories = getCategories();
                         <div class="hidden w-full md:block md:w-auto" id="navbar-default">
                                 <ul class="flex flex-col p-4 mt-4 bg-dark rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0">
                                         <li>
-                                                <a href="/twe_news/" class="block py-2 pr-4 pl-3 hover:text-yellow rounded md:bg-dark md:p-0" aria-current="page">Zprávy</a>
+                                                <a href="/twe_news/" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Zprávy</a>
                                         </li>
                                         <li>
-                                                <a href="/twe_news/category.php" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Kategorie</a>
+                                                <a href="/twe_news/category.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Kategorie</a>
                                         </li>
                                         <li>
                                                 <a href="#" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Autoři</a>
@@ -48,12 +48,13 @@ $categories = getCategories();
         </nav>
         <main>
                 <div class="container mx-auto mt-5 md:p-0 px-2">
-                        <h1 class="text-white text-5xl uppercase font-bold">Kategorie</h1>
-                        <?php foreach ($categories as $c) : ?>
+                        <h1 class="text-white text-5xl uppercase font-bold">Autoři</h1>
+                        <?php foreach ($authors as $a) : ?>
                                 <div>
-                                        <h1 class="text-3xl"><a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?catId=<?= $c["id"] ?>"><?= $c["name"] ?></a> - <?= $c["numOfArticles"] ?> <?= $c["numOfArticles"] > 1 ? "články" : "článek" ?></h1>
+                                        <h1 class="text-3xl"><a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?autId=<?= $a["id"] ?>"><?= $c["authorName"] ?></a> - <?= $c["numOfArticles"] ?> <?= $c["numOfArticles"] > 1 ? "články" : "článek" ?></h1>
                                 </div>
                         <?php endforeach; ?>
+                </div>
         </main>
         <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
 </body>
