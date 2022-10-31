@@ -76,6 +76,25 @@ function getAuthors()
 {
   $sql = "SELECT concat(a.name, ' ', a.surname) as authorName, a.id as authorId, count(ar.id) as numOfArticles FROM author a
                 INNER JOIN article ar on a.id = ar.author_id 
+                GROUP BY a.id
                 ";
   return run($sql);
+}
+
+function getArticle(int $id)
+{
+  $sql = "SELECT article.*, concat(author.name, ' ', author.surname) as authorName, author.id as authorId from article  INNER JOIN author on article.author_id = author.id WHERE article.id = :id";
+  $data = ["id" => $id,];
+  return run($sql, $data);
+}
+
+function getCategoriesForArticle(int $id)
+{
+  $sql = "SELECT c.id, c.name FROM article a 
+          INNER JOIN article_category ac on a.id = ac.article_id 
+          INNER JOIN category c on c.id = ac.category_id
+          WHERE a.id = :id
+        ";
+  $data = ["id" => $id,];
+  return run($sql, $data);
 }

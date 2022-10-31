@@ -5,11 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.3/dist/flowbite.min.css" />
   <link rel="stylesheet" href="output.css">
+  <link rel="stylesheet" href="article.css">
   <title>The #1 trusted news source!</title>
 </head>
 <?php
 require "utils.php";
-$authors = getAuthors();
+if (isset($_GET["id"])) {
+  $article = getArticle($_GET["id"]);
+  $categories = getCategoriesForArticle($_GET["id"]);
+}
 ?>
 
 <body class="bg-dark text-white">
@@ -28,13 +32,13 @@ $authors = getAuthors();
       <div class="hidden w-full md:block md:w-auto" id="navbar-default">
         <ul class="flex flex-col p-4 mt-4 bg-dark rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0">
           <li>
-            <a href="/twe_news/" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Zprávy</a>
+            <a href="/twe_news/" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Zprávy</a>
           </li>
           <li>
             <a href="/twe_news/category.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Kategorie</a>
           </li>
           <li>
-            <a href="/twe_news/author.php" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Autoři</a>
+            <a href="/twe_news/author.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Autoři</a>
           </li>
           <li>
             <a href="#" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Administrace</a>
@@ -48,12 +52,25 @@ $authors = getAuthors();
   </nav>
   <main>
     <div class="container mx-auto mt-5 md:p-0 px-2">
-      <h1 class="text-white text-5xl uppercase font-bold">Autoři</h1>
-      <?php foreach ($authors as $a) : ?>
-        <div>
-          <h1 class="text-3xl"><a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?autId=<?= $a["authorId"] ?>"><?= $a["authorName"] ?></a> - <?= $a["numOfArticles"] ?> <?= $a["numOfArticles"] > 1 ? "články" : "článek" ?></h1>
-        </div>
-      <?php endforeach; ?>
+      <div class="mt-5 flex flex-col gap-4 md:m-0 mx-auto w-[90%] md:w-[70%]">
+        <article>
+          <div class="flex gap-2">
+            <?php foreach ($categories as $c) : ?>
+              <a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?catId=<?= $c["id"] ?>">
+                <p><?= $c["name"] ?>
+              </a>
+            <?php endforeach; ?>
+          </div>
+          <div class="mt-4">
+            <h1 class="text-5xl text-yellow"><?= $article[0]["title"] ?></h1>
+            <h1 class="text-2xl text-white mt-2"><?= $article[0]["perex"] ?></h1>
+            <p><?= date_format(date_create($article[0]["created_at"]), "d.m.Y H:i") ?> <a class="underline text-yellow" href="index.php?autId=<?= $article[0]["authorId"] ?>"><?= $article[0]["authorName"] ?></a></p>
+            <div class="mb-5">
+              <?= $article[0]["text"] ?>
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
   </main>
   <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
