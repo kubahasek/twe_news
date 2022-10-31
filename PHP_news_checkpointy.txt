@@ -1,11 +1,11 @@
 1. checkpoint
 - Výpis článků na hlavní stránce [X]
 - Výpis kategorií na stránce Kategori s proklikem na seznam článků z dané kategorie [X]
-- Výpis autorů na stránce Autoři s proklikem na seznam článků daného autora []
-- Detail článků []
+- Výpis autorů na stránce Autoři s proklikem na seznam článků daného autora [X]
+- Detail článků [X]
 - Data a časy v českém formátu [X]
-- Prolinkovat vše, co bude možné []
-- - Odkazy na detail článků []
+- Prolinkovat vše, co bude možné [X]
+- - Odkazy na detail článků [X]
 - - Kde se objeví jméno autora, bude možné prokliknout na jeho články [X] 
 - - Kde se objeví název kategorie (ve výpisu, v detailu článku atd.) bude možné prokliknout na články z kategorie [X]
 - Grafika nemusí být kompletní
