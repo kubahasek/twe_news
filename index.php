@@ -21,7 +21,7 @@ if (isset($_GET["catId"])) {
 
 <body class="bg-dark text-white">
   <!-- colors: https://coolors.co/2e3532-ffbf00-c9c5cb-648767-7f2ccb -->
-  <nav class="bg-dark text-gray border-gray-200 px-2 sm:px-4 py-2.5 rounded shadow-xl">
+  <nav class="bg-violet text-gray border-gray-200 px-2 sm:px-4 py-2.5 rounded shadow-xl">
     <div class="container flex flex-wrap justify-between items-center mx-auto">
       <a href="/twe_news/" class="flex items-center">
         <span class="self-center text-white text-4xl font-semibold whitespace-nowrap dark:text-white">PHP News</span>
@@ -57,18 +57,18 @@ if (isset($_GET["catId"])) {
     <div class="container mx-auto mt-5 md:p-0 px-2">
       <h1 class="text-white text-5xl uppercase font-bold">Články <?= isset($_GET["catId"]) ? "v " . $catName[0]["name"] : (isset($_GET["autId"]) ? "od " . $authorName[0]["name"] : "") ?></h1>
       <p class="text-gray-500">Nejnovější zprávy z IT</p>
-      <div class="mt-5 flex flex-col gap-4 md:m-0 mx-auto w-[90%] md:w-[70%]">
+      <div class="mt-5 mb-5 flex flex-col gap-4 md:m-0 mx-auto w-[90%] md:w-[70%]">
         <?php foreach ($articles as $a) : ?>
-          <article>
+          <article class="">
             <div class="flex gap-2">
-              <?php foreach (explode(",", $a["catName"]) as $key => $catName) : ?>
-                <a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?catId=<?= explode(",", $a["catId"])[$key] ?>">
-                  <p><?= $catName ?>
+              <?php foreach (getCategoriesForArticle($a["id"]) as $key => $cat) : ?>
+                <a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?catId=<?= $cat["id"] ?>">
+                  <p><?= $cat["name"] ?>
                 </a>
               <?php endforeach; ?>
             </div>
             <a href="article.php?id=<?= $a["id"] ?>">
-              <h1 class="text-5xl mb-4 text-yellow hover:cursor-pointer"><?= $a["title"] ?></h1>
+              <h1 class="text-5xl mb-4 text-yellow hover:underline hover:cursor-pointer"><?= $a["title"] ?></h1>
             </a>
             <p><?= date_format(date_create($a["created_at"]), "d.m.Y H:i") ?> <a class="underline text-yellow" href="index.php?autId=<?= $a["authorId"] ?>"><?= $a["authorName"] ?></a></p>
             <p><?= $a["perex"] ?></p>

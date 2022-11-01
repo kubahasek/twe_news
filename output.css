@@ -1,5 +1,5 @@
 /*
-! tailwindcss v3.2.1 | MIT License | https://tailwindcss.com
+! tailwindcss v3.2.0 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -620,6 +620,14 @@ video {
   margin-top: 1.25rem;
 }
 
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.mb-5 {
+  margin-bottom: 1.25rem;
+}
+
 .mb-4 {
   margin-bottom: 1rem;
 }
@@ -718,6 +726,11 @@ video {
   background-color: rgb(255 191 0 / var(--tw-bg-opacity));
 }
 
+.bg-violet {
+  --tw-bg-opacity: 1;
+  background-color: rgb(127 44 203 / var(--tw-bg-opacity));
+}
+
 .p-2 {
   padding: 0.5rem;
 }
@@ -764,6 +777,11 @@ video {
   line-height: 1;
 }
 
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
@@ -808,6 +826,10 @@ video {
 .hover\:text-yellow:hover {
   --tw-text-opacity: 1;
   color: rgb(255 191 0 / var(--tw-text-opacity));
+}
+
+.hover\:underline:hover {
+  text-decoration-line: underline;
 }
 
 .focus\:outline-none:focus {

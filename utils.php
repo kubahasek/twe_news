@@ -11,7 +11,7 @@ function run($sql, $data = [])
 function getArticles(): array
 {
   $sql = "
-        SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, GROUP_CONCAT(c.name) as catName, GROUP_CONCAT(c.id) as catId, a.id as authorId FROM article ar
+        SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, a.id as authorId FROM article ar
         INNER JOIN author a on ar.author_id = a.id
         INNER JOIN article_category ac on ar.id = ac.article_id
         INNER JOIN category c on ac.category_id = c.id
@@ -33,7 +33,7 @@ function getCategories()
 function getArticlesForCategory(int $id)
 {
   $sql = "
-        SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, GROUP_CONCAT(c.name) as catName, GROUP_CONCAT(c.id) as catId, a.id as authorId FROM article ar
+        SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, a.id as authorId FROM article ar
         INNER JOIN author a on ar.author_id = a.id
         INNER JOIN article_category ac on ar.id = ac.article_id
         INNER JOIN category c on ac.category_id = c.id
@@ -54,7 +54,7 @@ function getCategoryName(int $id)
 function getArticlesForAuthor(int $id)
 {
   $sql = "
-        SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, GROUP_CONCAT(c.name) as catName, GROUP_CONCAT(c.id) as catId, a.id as authorId FROM article ar
+        SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, a.id as authorId FROM article ar
         INNER JOIN author a on ar.author_id = a.id
         INNER JOIN article_category ac on ar.id = ac.article_id
         INNER JOIN category c on ac.category_id = c.id
