@@ -16,6 +16,7 @@ function getArticles(): array
         INNER JOIN article_category ac on ar.id = ac.article_id
         INNER JOIN category c on ac.category_id = c.id
         GROUP BY ar.id
+        ORDER BY ar.created_at desc
         LIMIT 5
         ";
   return run($sql);

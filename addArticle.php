@@ -9,7 +9,7 @@
 </head>
 <?php
 require "utils.php";
-$authors = getAuthors();
+
 ?>
 
 <body class="bg-dark text-white">
@@ -34,13 +34,13 @@ $authors = getAuthors();
             <a href="/twe_news/category.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Kategorie</a>
           </li>
           <li>
-            <a href="/twe_news/author.php" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Autoři</a>
+            <a href="/twe_news/author.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Autoři</a>
           </li>
           <li>
             <a href="#" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Administrace</a>
           </li>
           <li>
-            <a href="#" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Přidat</a>
+            <a href="/twe_news/addArticle.php" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Přidat</a>
           </li>
         </ul>
       </div>
@@ -48,13 +48,12 @@ $authors = getAuthors();
   </nav>
   <main>
     <div class="container mx-auto mt-5 md:p-0 px-2">
-      <h1 class="text-white text-5xl uppercase font-bold">Autoři</h1>
-      <?php foreach ($authors as $a) : ?>
+      <h1 class="text-white text-5xl uppercase font-bold">Přidat článek</h1>
+      <div id="editor" class="pell"></div>
         <div>
-          <h1 class="text-3xl"><a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?autId=<?= $a["authorId"] ?>"><?= $a["authorName"] ?></a> - <?= $a["numOfArticles"] ?> <?= $a["numOfArticles"] > 1 ? "články" : "článek" ?></h1>
+        HTML output:
+        <div id="html-output" style="white-space:pre-wrap;"></div>
         </div>
-      <?php endforeach; ?>
-    </div>
   </main>
   <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
 </body>
