@@ -65,7 +65,7 @@ $authors = getAuthors();
             <div class="flex gap-4 items-center">
               <?php foreach($categories as $c): ?>
                 <div>
-                  <input id="checkbox-<?= $c["id"] ?>" name="category" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500">
+                  <input id="checkbox-<?= $c["id"] ?>" name="category[]" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500">
                   <label for="checkbox-<?= $c["id"] ?>" class="ml-2 text-sm font-medium text-white"><?= $c["name"] ?></label>
                 </div>
               <?php endforeach; ?>
