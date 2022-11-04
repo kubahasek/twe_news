@@ -8,6 +8,14 @@ function run($sql, $data = [])
   return $stmt->fetchAll();
 }
 
+function insert($sql, $data = [])
+{
+  require "db.php";
+  $stmt = $conn->prepare($sql);
+  $stmt->execute($data);
+  return $conn->lastInsertId();
+}
+
 function getArticles(): array
 {
   $sql = "
@@ -98,4 +106,29 @@ function getCategoriesForArticle(int $id)
         ";
   $data = ["id" => $id,];
   return run($sql, $data);
+}
+
+function createArticle(string $name, string $perex, array $categories, string $author, string $content)
+{
+  $sql = "INSERT INTO article (title, perex, author_id, text, created_at) VALUES (:name, :perex, :author, :content, NOW())";
+  $data = [
+    "name" => $name,
+    "perex" => $perex,
+    "author" => $author,
+    "content" => $content,
+  ];
+  $id = insert($sql, $data);
+  insertArticleCategories($id, $categories);
+}
+
+function insertArticleCategories(int $articleId, array $categories)
+{
+  foreach ($categories as $c) {
+    $sql = "INSERT INTO article_category (article_id, category_id) VALUES (:articleId, :categoryId)";
+    $data = [
+      "articleId" => $articleId,
+      "categoryId" => $c,
+    ];
+    run($sql, $data);
+  }
 }

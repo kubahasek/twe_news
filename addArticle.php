@@ -1,16 +1,24 @@
+<?php
+require "utils.php";
+
+if (!empty($_POST) && isset($_POST)) {
+  createArticle($_POST["articleName"], $_POST["perex"], $_POST["category"], $_POST["author"], $_POST["articleContent"]);
+}
+
+?>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet"> 
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.3/dist/flowbite.min.css" />
-  <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script> <link rel="stylesheet" href="quill.css">
+  <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+  <link rel="stylesheet" href="quill.css">
   <link rel="stylesheet" href="output.css">
   <title>The #1 trusted news source!</title>
 </head>
 <?php
-require "utils.php";
 
 $categories = getCategories();
 $authors = getAuthors();
@@ -55,7 +63,7 @@ $authors = getAuthors();
     <div class="container mx-auto mt-5 md:p-0 px-2">
       <h1 class="text-white text-3xl md:text-5xl uppercase font-bold">Přidat článek</h1>
       <div class="text-white mt-4">
-        <form class="flex flex-col gap-4" action="." method="post">
+        <form class="flex flex-col gap-4" action="" method="post">
           <div>
             <label for="articleName" class="block mb-2 text-sm font-medium text-white">Název článku</label>
             <input type="text" id="articleName" name="articleName" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Sick name man..." required>
@@ -63,11 +71,9 @@ $authors = getAuthors();
           <div>
             <label for="category" class="block mb-2 text-sm font-medium text-white">Kategorie</label>
             <div class="flex gap-4 items-center">
-              <?php foreach($categories as $c): ?>
-                <div>
-                  <input id="checkbox-<?= $c["id"] ?>" name="category[]" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500">
-                  <label for="checkbox-<?= $c["id"] ?>" class="ml-2 text-sm font-medium text-white"><?= $c["name"] ?></label>
-                </div>
+              <?php foreach ($categories as $c) : ?>
+                <input id="checkbox-<?= $c["id"] ?>" name="category[]" type="checkbox" value="<?= $c["id"] ?>" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500">
+                <label for="checkbox-<?= $c["id"] ?>" class="ml-2 text-sm font-medium text-white"><?= $c["name"] ?></label>
               <?php endforeach; ?>
             </div>
           </div>
@@ -75,8 +81,8 @@ $authors = getAuthors();
             <label for="authors" class="block mb-2 text-sm font-medium text-white">Autor</label>
             <select id="authors" name="author" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
               <option selected hidden>Vyberte autora</option>
-              <?php foreach($authors as $a): ?>
-                <option value="<?= $a['id'] ?>"><?= $a["authorName"] ?></option>
+              <?php foreach ($authors as $a) : ?>
+                <option value="<?= $a['authorId'] ?>"><?= $a["authorName"] ?></option>
               <?php endforeach; ?>
             </select>
           </div>
@@ -91,13 +97,13 @@ $authors = getAuthors();
           <div>
             <input type="text" name="articleContent" id="articleContent" hidden>
           </div>
-          <button type="button" class="text-dark bg-yellow hover:bg-violet focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Default</button>
+          <button type="submit" class="text-dark bg-yellow hover:bg-violet focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Default</button>
         </form>
       </div>
   </main>
   <script src="./Quill.js"></script>
   <script>
-    
+
 
 
   </script>
