@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "tailwind": "npx tailwindcss -i input.css -o output.css --watch"
+    "tailwind": "npx tailwindcss -i input.css -o output.css --watch",
+    "reload": "browser-sync start --proxy 'localhost/twe_news' --files '*.php' --browser firefox"
   },
   "repository": {
     "type": "git",
