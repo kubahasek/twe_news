@@ -110,6 +110,15 @@ function getAuthors()
   return run($sql);
 }
 
+function getAuthor(int $id)
+{
+  $sql = "SELECT * FROM author WHERE id = :id";
+  $data = [
+    "id" => $id,
+  ];
+  return run($sql, $data);
+}
+
 function getArticle(int $id)
 {
   $sql = "SELECT article.*, concat(author.name, ' ', author.surname) as authorName, author.id as authorId from article  INNER JOIN author on article.author_id = author.id WHERE article.id = :id";
@@ -179,4 +188,27 @@ function updateArticleCategories(int $articleId, array $categories)
   run($sql, $data);
 
   insertArticleCategories($articleId, $categories);
+}
+
+function createAuthor(string $name, string $surname)
+{
+  $sql = "INSERT INTO author (name, surname) VALUES (:name, :surname)";
+  $data = [
+    "name" => $name,
+    "surname" => $surname,
+  ];
+
+  return insert($sql, $data);
+}
+
+function updateAuthor(int $id, string $name, string $surname)
+{
+  $sql = "UPDATE author set name = :name, surname = :surname WHERE id = :id";
+  $data = [
+    "name" => $name,
+    "surname" => $surname,
+    "id" => $id,
+  ];
+
+  update($sql, $data);
 }

@@ -911,6 +911,11 @@ video {
   color: rgb(255 0 0 / var(--tw-text-opacity));
 }
 
+.hover\:text-green:hover {
+  --tw-text-opacity: 1;
+  color: rgb(100 135 103 / var(--tw-text-opacity));
+}
+
 .hover\:underline:hover {
   text-decoration-line: underline;
 }

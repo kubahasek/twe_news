@@ -3,7 +3,6 @@ require "utils.php";
 
 $categoriesForArticleIds = [];
 if (!empty($_POST) && isset($_POST) && !isset($_GET["id"])) {
-  var_dump(isset($_POST['public']) ? 1 : 0);
   $articleId = createArticle($_POST["articleName"], $_POST["perex"], $_POST["category"], $_POST["author"], $_POST["articleContent"], isset($_POST['public']) ? 1 : 0);
   header("Location: /twe_news/article.php?id=" . $articleId);
 } else if (!empty($_POST) && isset($_POST) && isset($_GET["id"])) {
