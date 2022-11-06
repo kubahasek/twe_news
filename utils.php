@@ -59,6 +59,16 @@ function getCategories()
   return run($sql);
 }
 
+function getCategory(int $id)
+{
+  $sql = "SELECT c.*, count(a.id) as numOfArticles FROM category c LEFT JOIN article_category ac on c.id = ac.category_id LEFT JOIN article a on a.id = ac.article_id WHERE c.id = :id";
+  $data = [
+    "id" => $id,
+  ];
+
+  return run($sql, $data);
+}
+
 function getArticlesForCategory(int $id)
 {
   $sql = "
@@ -225,6 +235,37 @@ function deleteAuthor(int $id)
 function deleteArticle(int $id)
 {
   $sql = "DELETE FROM article WHERE id = :id";
+  $data = [
+    "id" => $id,
+  ];
+
+  run($sql, $data);
+}
+
+function createCategory(string $name)
+{
+  $sql = "INSERT INTO category (name) VALUES (:name)";
+  $data = [
+    "name" => $name,
+  ];
+
+  return insert($sql, $data);
+}
+
+function updateCategory(int $id, string $name)
+{
+  $sql = "UPDATE category set name = :name WHERE id = :id";
+  $data = [
+    "name" => $name,
+    "id" => $id,
+  ];
+
+  return update($sql, $data);
+}
+
+function deleteCategory(int $id)
+{
+  $sql = "DELETE FROM category WHERE id = :id";
   $data = [
     "id" => $id,
   ];

@@ -18,8 +18,8 @@
 - [ ] - Administrace všeho
 - [x] - - Přidávání/úprava/mazání článků + WYSIWYG editor
 - [x] - - Přidávání/úprava/mazání autorů
-- [ ] - - Přidávání/úprava/mazání kategorií
+- [x] - - Přidávání/úprava/mazání kategorií
 - [ ] - Zbývající prolinkování (odkaz na editaci/smazání z detailu článku)
-- [ ] - "Lidská" chybová zpráva při pokusu o smazání kategorie/autora s články
+- [x] - "Lidská" chybová zpráva při pokusu o smazání kategorie/autora s články
 - [ ] - Dokončená grafika
 - [ ] - Případné extra úkoly
