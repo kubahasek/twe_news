@@ -15,11 +15,11 @@
 
 2. checkpoint
 
-- [] - Administrace všeho
+- [ ] - Administrace všeho
 - [x] - - Přidávání/úprava/mazání článků + WYSIWYG editor
-- [] - - Přidávání/úprava/mazání autorů
-- [] - - Přidávání/úprava/mazání kategorií
-- [] - Zbývající prolinkování (odkaz na editaci/smazání z detailu článku)
-- [] - "Lidská" chybová zpráva při pokusu o smazání kategorie/autora s články
-- [] - Dokončená grafika
-- [] - Případné extra úkoly
+- [ ] - - Přidávání/úprava/mazání autorů
+- [ ] - - Přidávání/úprava/mazání kategorií
+- [ ] - Zbývající prolinkování (odkaz na editaci/smazání z detailu článku)
+- [ ] - "Lidská" chybová zpráva při pokusu o smazání kategorie/autora s články
+- [ ] - Dokončená grafika
+- [ ] - Případné extra úkoly
