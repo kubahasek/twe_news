@@ -1,10 +1,23 @@
-var quill = new Quill('#editor', {
-    theme: 'snow'
+var toolbarOptions = [
+  [{ header: "2" }],
+  ["bold", "italic", "underline"],
+  ["link", "image"],
+  ["code"],
+];
+let quill = new Quill("#editor-container", {
+  placeholder: "Compose an epic...",
+  theme: "snow",
+  modules: {
+    toolbar: toolbarOptions,
+  },
 });
 
 let text;
 
-quill.on("text-change", function() {
-    text = quill.root.innerHTML;
-    document.getElementById("articleContent").value = text;
+try {
+  quill.root.innerHTML = htmlFromDB;
+} catch (e) {}
+quill.on("text-change", function () {
+  text = quill.root.innerHTML;
+  document.getElementById("articleContent").value = text;
 });

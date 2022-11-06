@@ -9,7 +9,7 @@
 </head>
 <?php
 require "utils.php";
-$articles = getArticles();
+$articles = getArticles(false);
 if (isset($_GET["catId"])) {
   $articles = getArticlesForCategory($_GET["catId"]);
   $catName = getCategoryName($_GET["catId"]);

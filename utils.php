@@ -16,9 +16,17 @@ function insert($sql, $data = [])
   return $conn->lastInsertId();
 }
 
-function getArticles(): array
+function update($sql, $data = [])
 {
-  $sql = "
+  require "db.php";
+  $stmt = $conn->prepare($sql);
+  $stmt->execute($data);
+}
+
+function getArticles(bool $all): array
+{
+  if ($all) {
+    $sql = "
         SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, a.id as authorId FROM article ar
         INNER JOIN author a on ar.author_id = a.id
         INNER JOIN article_category ac on ar.id = ac.article_id
@@ -27,14 +35,26 @@ function getArticles(): array
         ORDER BY ar.created_at desc
         LIMIT 5
         ";
+  } else {
+    $sql = "
+        SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, a.id as authorId FROM article ar
+        INNER JOIN author a on ar.author_id = a.id
+        INNER JOIN article_category ac on ar.id = ac.article_id
+        INNER JOIN category c on ac.category_id = c.id
+        WHERE ar.public = 1
+        GROUP BY ar.id
+        ORDER BY ar.created_at desc
+        LIMIT 5
+        ";
+  }
   return run($sql);
 }
 
 function getCategories()
 {
   $sql = "SELECT c.*, count(a.id) as numOfArticles FROM category c 
-                INNER JOIN article_category ac on c.id = ac.category_id
-                INNER JOIN article a ON ac.article_id = a.id
+                LEFT JOIN article_category ac on c.id = ac.category_id
+                LEFT JOIN article a ON ac.article_id = a.id
                 GROUP BY c.id";
   return run($sql);
 }
@@ -108,17 +128,19 @@ function getCategoriesForArticle(int $id)
   return run($sql, $data);
 }
 
-function createArticle(string $name, string $perex, array $categories, string $author, string $content)
+function createArticle(string $name, string $perex, array $categories, string $author, string $content, int $public)
 {
-  $sql = "INSERT INTO article (title, perex, author_id, text, created_at) VALUES (:name, :perex, :author, :content, NOW())";
+  $sql = "INSERT INTO article (title, perex, author_id, text, created_at, public) VALUES (:name, :perex, :author, :content, NOW(), :public)";
   $data = [
     "name" => $name,
     "perex" => $perex,
     "author" => $author,
     "content" => $content,
+    "public" => $public,
   ];
   $id = insert($sql, $data);
   insertArticleCategories($id, $categories);
+  return $id;
 }
 
 function insertArticleCategories(int $articleId, array $categories)
@@ -131,4 +153,30 @@ function insertArticleCategories(int $articleId, array $categories)
     ];
     run($sql, $data);
   }
+}
+
+function updateArticle(int $articleId, string $name, string $perex, array $categories, string $author, string $content, int $public)
+{
+  $sql = "UPDATE article SET title = :name, perex = :perex, text = :content, author_id = :author, public = :public WHERE id = :id";
+  $data = [
+    "id" => $articleId,
+    "name" => $name,
+    "perex" => $perex,
+    "author" => $author,
+    "content" => $content,
+    "public" => $public,
+  ];
+  update($sql, $data);
+  updateArticleCategories($articleId, $categories);
+}
+
+function updateArticleCategories(int $articleId, array $categories)
+{
+  $sql = "DELETE FROM article_category WHERE article_id = :articleId";
+  $data = [
+    "articleId" => $articleId,
+  ];
+  run($sql, $data);
+
+  insertArticleCategories($articleId, $categories);
 }

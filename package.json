@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "tailwind": "npx tailwindcss -i input.css -o output.css --watch",
-    "reload": "browser-sync start --proxy 'localhost/twe_news' --files '*.php' --browser firefox"
+    "reload": "browser-sync start --proxy 'localhost/twe_news' --files '*.php' '*.js' --browser firefox"
   },
   "repository": {
     "type": "git",
