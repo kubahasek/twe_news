@@ -221,3 +221,13 @@ function deleteAuthor(int $id)
 
   run($sql, $data);
 }
+
+function deleteArticle(int $id)
+{
+  $sql = "DELETE FROM article WHERE id = :id";
+  $data = [
+    "id" => $id,
+  ];
+
+  run($sql, $data);
+}
