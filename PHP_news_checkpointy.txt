@@ -12,7 +12,7 @@
 
 2. checkpoint
 [] - Administrace všeho 
-[] - - Přidávání/úprava/mazání článků + WYSIWYG editor
+[X] - - Přidávání/úprava/mazání článků + WYSIWYG editor
 [] - - Přidávání/úprava/mazání autorů
 [] - - Přidávání/úprava/mazání kategorií 
 [] - Zbývající prolinkování (odkaz na editaci/smazání z detailu článku) 
