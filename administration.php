@@ -129,7 +129,7 @@ $articles = getArticles(true);
                       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                     </svg>
                   </a>
-                  <a class="hover:text-red cursor-pointer">
+                  <a href="/twe_news/deleteAuthor.php?id=<?= $a["authorId"] ?>" class="hover:text-red cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                       <line x1="9" y1="9" x2="15" y2="15"></line>

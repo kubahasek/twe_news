@@ -104,7 +104,7 @@ function getAuthorName(int $id)
 function getAuthors()
 {
   $sql = "SELECT concat(a.name, ' ', a.surname) as authorName, a.id as authorId, count(ar.id) as numOfArticles FROM author a
-                INNER JOIN article ar on a.id = ar.author_id 
+                LEFT JOIN article ar on a.id = ar.author_id 
                 GROUP BY a.id
                 ";
   return run($sql);
@@ -112,7 +112,7 @@ function getAuthors()
 
 function getAuthor(int $id)
 {
-  $sql = "SELECT * FROM author WHERE id = :id";
+  $sql = "SELECT *, count(ar.id) as numOfArticles FROM author a INNER JOIN article ar on a.id = ar.author_id WHERE a.id = :id";
   $data = [
     "id" => $id,
   ];
@@ -211,4 +211,13 @@ function updateAuthor(int $id, string $name, string $surname)
   ];
 
   update($sql, $data);
+}
+function deleteAuthor(int $id)
+{
+  $sql = "DELETE FROM author WHERE id = :id";
+  $data = [
+    "id" => $id,
+  ];
+
+  run($sql, $data);
 }
