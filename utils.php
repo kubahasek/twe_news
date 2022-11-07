@@ -8,6 +8,12 @@ function run($sql, $data = [])
   return $stmt->fetchAll();
 }
 
+function delete($sql, $data = []){
+  require "db.php";
+  $stmt = $conn->prepare($sql);
+  $stmt->execute($data);
+}
+
 function insert($sql, $data = [])
 {
   require "db.php";
@@ -33,7 +39,6 @@ function getArticles(bool $all): array
         INNER JOIN category c on ac.category_id = c.id
         GROUP BY ar.id
         ORDER BY ar.created_at desc
-        LIMIT 5
         ";
   } else {
     $sql = "
@@ -170,7 +175,7 @@ function insertArticleCategories(int $articleId, array $categories)
       "articleId" => $articleId,
       "categoryId" => $c,
     ];
-    run($sql, $data);
+    insert($sql, $data);
   }
 }
 
@@ -195,7 +200,7 @@ function updateArticleCategories(int $articleId, array $categories)
   $data = [
     "articleId" => $articleId,
   ];
-  run($sql, $data);
+  delete($sql, $data);
 
   insertArticleCategories($articleId, $categories);
 }
@@ -229,7 +234,7 @@ function deleteAuthor(int $id)
     "id" => $id,
   ];
 
-  run($sql, $data);
+  delete($sql, $data);
 }
 
 function deleteArticle(int $id)
@@ -239,7 +244,7 @@ function deleteArticle(int $id)
     "id" => $id,
   ];
 
-  run($sql, $data);
+  delete($sql, $data);
 }
 
 function createCategory(string $name)
@@ -270,5 +275,5 @@ function deleteCategory(int $id)
     "id" => $id,
   ];
 
-  run($sql, $data);
+  delete($sql, $data);
 }
