@@ -1,4 +1,13 @@
+<?php
+require "utils.php";
+
+if (!empty($_POST) && isset($_POST)) {
+  $comment = createComment($_POST["email"], $_POST["content"], $_GET["id"]);
+}
+?>
+
 <html lang="en">
+
 
 <head>
   <meta charset="UTF-8">
@@ -9,7 +18,6 @@
   <title>The #1 trusted news source!</title>
 </head>
 <?php
-require "utils.php";
 if (isset($_GET["id"])) {
   $article = getArticle($_GET["id"]);
   $categories = getCategoriesForArticle($_GET["id"]);
@@ -85,6 +93,29 @@ if (isset($_GET["id"])) {
             </div>
           </div>
         </article>
+        <div>
+        <h1 class="text-3xl font-bold mb-4">Komentáře</h1>
+        <form class="" action="" method="POST">
+          <div class="flex flex-col gap-2 items-center py-2 px-3 bg-dark rounded-lg">
+            <div class="w-full">
+              <label for="articleName" class="block mb-2 text-sm font-medium text-white">Email</label>
+              <input type="text" id="articleName" name="email" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Drop yo email..." required>
+            </div>
+            <div class="w-full flex flex-col gap-2">
+            <label for="chat" class="block mb-2 text-sm font-medium text-white">Your message</label>
+            <div class="flex w-full items-center">
+              <textarea id="chat" name="content" rows="1" class="block bg-dark p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..."></textarea>
+              <button type="submit" class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
+              <svg aria-hidden="true" class="w-6 h-6 rotate-90" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+              <span class="sr-only">Send message</span>
+              </button>
+            </div>
+          </div>
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
+          <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+          </div>
+        </form>
+        </div>
       </div>
     </div>
   </main>

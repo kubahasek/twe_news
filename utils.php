@@ -277,3 +277,14 @@ function deleteCategory(int $id)
 
   delete($sql, $data);
 }
+
+function createComment(string $email, string $content, int $articleId){
+  $sql = "INSERT INTO comments (article_id, email, content) VALUES (:articleId, :email, :content)";
+  $data = [
+    "articleId" => $articleId,
+    "email" => $email,
+    "content" => $content,
+  ];
+
+  insert($sql, $data);
+}
