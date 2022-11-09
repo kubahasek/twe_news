@@ -8,7 +8,8 @@ function run($sql, $data = [])
   return $stmt->fetchAll();
 }
 
-function delete($sql, $data = []){
+function delete($sql, $data = [])
+{
   require "db.php";
   $stmt = $conn->prepare($sql);
   $stmt->execute($data);
@@ -278,7 +279,8 @@ function deleteCategory(int $id)
   delete($sql, $data);
 }
 
-function createComment(string $email, string $content, int $articleId){
+function createComment(string $email, string $content, int $articleId)
+{
   $sql = "INSERT INTO comments (article_id, email, content) VALUES (:articleId, :email, :content)";
   $data = [
     "articleId" => $articleId,
@@ -289,11 +291,29 @@ function createComment(string $email, string $content, int $articleId){
   insert($sql, $data);
 }
 
-function getCommentsForArticle(int $id) {
+function getCommentsForArticle(int $id)
+{
   $sql = "SELECT * FROM comments c INNER JOIN article a on c.article_id = a.id WHERE a.id = :id";
   $data = [
     "id" => $id,
   ];
 
   return run($sql, $data);
+}
+
+function deleteComment(int $id)
+{
+  $sql = "DELETE FROM comments WHERE id = :id";
+  $data = [
+    "id" => $id,
+  ];
+
+  delete($sql, $data);
+}
+
+function getAllComments()
+{
+  $sql = "SELECT * FROM comments";
+
+  return run($sql);
 }

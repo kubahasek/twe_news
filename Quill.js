@@ -5,7 +5,6 @@ var toolbarOptions = [
   ["code"],
 ];
 let quill = new Quill("#editor-container", {
-  placeholder: "Compose an epic...",
   theme: "snow",
   modules: {
     toolbar: toolbarOptions,

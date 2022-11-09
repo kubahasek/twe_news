@@ -12,6 +12,7 @@ require "utils.php";
 $categories = getCategories();
 $authors = getAuthors();
 $articles = getArticles(true);
+$comments = getAllComments();
 
 ?>
 
@@ -175,6 +176,43 @@ $articles = getArticles(true);
                     </svg>
                   </a>
                   <a href="/twe_news/deleteArticle.php?id=<?= $a["id"] ?>" class="hover:text-red cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="9" y1="9" x2="15" y2="15"></line>
+                      <line x1="15" y1="9" x2="9" y2="15"></line>
+                    </svg>
+                  </a>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+      <div class="mb-4">
+        <div class="flex items-center gap-2">
+          <h2 class="text-white text-3xl uppercase font-bold">Komentáře</h2>
+        </div>
+        <table class="mt-4 text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-center text-white uppercase bg-violet">
+            <tr>
+              <th scope="col" class="py-3 px-6">
+                Email
+              </th>
+              <th scope="col" class="py-3 px-6">
+                Komentář
+              </th>
+              <th scope="col" class="py-3 px-6">
+                Akce
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($comments as $c) : ?>
+              <tr class="bg-dark text-white border-b dark:bg-gray-900 dark:border-gray-700">
+                <td class="p-2"><?= $c["email"] ?></td>
+                <td class="p-2"><?= $c["content"] ?></td>
+                <td class="flex p-2 justify-center">
+                  <a href="/twe_news/deleteComment.php?id=<?= $c["id"] ?>" class="hover:text-red cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                       <line x1="9" y1="9" x2="15" y2="15"></line>
