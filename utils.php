@@ -288,3 +288,12 @@ function createComment(string $email, string $content, int $articleId){
 
   insert($sql, $data);
 }
+
+function getCommentsForArticle(int $id) {
+  $sql = "SELECT * FROM comments c INNER JOIN article a on c.article_id = a.id WHERE a.id = :id";
+  $data = [
+    "id" => $id,
+  ];
+
+  return run($sql, $data);
+}
