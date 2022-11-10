@@ -293,7 +293,7 @@ function createComment(string $email, string $content, int $articleId)
 
 function getCommentsForArticle(int $id)
 {
-  $sql = "SELECT * FROM comments c INNER JOIN article a on c.article_id = a.id WHERE a.id = :id";
+  $sql = "SELECT * FROM comments c INNER JOIN article a on c.article_id = a.id WHERE a.id = :id ORDER BY c.submitted_at desc";
   $data = [
     "id" => $id,
   ];
@@ -313,7 +313,7 @@ function deleteComment(int $id)
 
 function getAllComments()
 {
-  $sql = "SELECT * FROM comments";
+  $sql = "SELECT *, a.title FROM comments c INNER JOIN article a on c.article_id = a.id ORDER BY c.submitted_at desc";
 
   return run($sql);
 }

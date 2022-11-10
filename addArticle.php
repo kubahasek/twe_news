@@ -84,14 +84,18 @@ $authors = getAuthors();
           </div>
           <div>
             <label for="category" class="block mb-2 text-sm font-medium text-white">Kategorie</label>
-            <div class="flex gap-4 items-center">
+            <div class="flex gap-2 items-center">
               <?php foreach ($categories as $c) : ?>
                 <?php if (in_array($c["id"], $categoriesForArticleIds)) : ?>
-                  <input id="checkbox-<?= $c["id"] ?>" name="category[]" type="checkbox" value="<?= $c["id"] ?>" checked class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500">
-                  <label for="checkbox-<?= $c["id"] ?>" class="ml-2 text-sm font-medium text-white"><?= $c["name"] ?></label>
+                  <div>
+                    <input id="checkbox-<?= $c["id"] ?>" name="category[]" type="checkbox" value="<?= $c["id"] ?>" checked class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500">
+                    <label for="checkbox-<?= $c["id"] ?>" class="text-sm font-medium text-white"><?= $c["name"] ?></label>
+                  </div>
                 <?php else : ?>
-                  <input id="checkbox-<?= $c["id"] ?>" name="category[]" type="checkbox" value="<?= $c["id"] ?>" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500">
-                  <label for="checkbox-<?= $c["id"] ?>" class="ml-2 text-sm font-medium text-white"><?= $c["name"] ?></label>
+                  <div>
+                    <input id="checkbox-<?= $c["id"] ?>" name="category[]" type="checkbox" value="<?= $c["id"] ?>" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500">
+                    <label for="checkbox-<?= $c["id"] ?>" class="text-sm font-medium text-white"><?= $c["name"] ?></label>
+                  </div>
                 <?php endif; ?>
               <?php endforeach; ?>
             </div>

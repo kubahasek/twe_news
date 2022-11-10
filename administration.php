@@ -202,6 +202,9 @@ $comments = getAllComments();
                 Komentář
               </th>
               <th scope="col" class="py-3 px-6">
+                Článek
+              </th>
+              <th scope="col" class="py-3 px-6">
                 Akce
               </th>
             </tr>
@@ -211,6 +214,7 @@ $comments = getAllComments();
               <tr class="bg-dark text-white border-b dark:bg-gray-900 dark:border-gray-700">
                 <td class="p-2"><?= $c["email"] ?></td>
                 <td class="p-2"><?= $c["content"] ?></td>
+                <td class="p-2"><?= $c["title"] ?></td>
                 <td class="flex p-2 justify-center">
                   <a href="/twe_news/deleteComment.php?id=<?= $c["id"] ?>" class="hover:text-red cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
