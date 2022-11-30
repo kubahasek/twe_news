@@ -55,24 +55,24 @@ if (isset($_GET["catId"])) {
   </nav>
   <main>
     <div class="container mx-auto mt-5 md:p-0 px-2">
-      <h1 class="text-white text-5xl uppercase font-bold">Články <?= isset($_GET["catId"]) ? "v " . $catName[0]["name"] : (isset($_GET["autId"]) ? "od " . $authorName[0]["name"] : "") ?></h1>
+      <h1 class="text-white text-5xl uppercase font-bold">Články <?php echo isset($_GET["catId"]) ? "v " . $catName[0]["name"] : (isset($_GET["autId"]) ? "od " . $authorName[0]["name"] : "") ?></h1>
       <p class="text-gray-500">Nejnovější zprávy z IT</p>
       <div class="mt-5 mb-5 flex flex-col gap-4 md:m-0 mx-auto w-[90%] md:w-[70%]">
         <?php foreach ($articles as $a) : ?>
           <article class="">
             <div class="flex gap-2">
               <?php foreach (getCategoriesForArticle($a["id"]) as $key => $cat) : ?>
-                <a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?catId=<?= $cat["id"] ?>">
-                  <p><?= $cat["name"] ?>
+                <a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?catId=<?php echo $cat["id"] ?>">
+                  <p><?php echo $cat["name"] ?>
                 </a>
               <?php endforeach; ?>
             </div>
-            <a href="article.php?id=<?= $a["id"] ?>">
-              <h1 class="text-5xl mb-4 text-yellow hover:underline hover:cursor-pointer"><?= $a["title"] ?></h1>
+            <a href="article.php?id=<?php echo $a["id"] ?>">
+              <h1 class="text-5xl mb-4 text-yellow hover:underline hover:cursor-pointer"><?php echo $a["title"] ?></h1>
             </a>
-            <p><?= date_format(date_create($a["created_at"]), "d.m.Y H:i") ?> <a class="underline text-yellow" href="index.php?autId=<?= $a["authorId"] ?>"><?= $a["authorName"] ?></a></p>
-            <p><?= $a["perex"] ?></p>
-            <a href="article.php?id=<?= $a["id"] ?>">
+            <p><?php echo date_format(date_create($a["created_at"]), "d.m.Y H:i") ?> <a class="underline text-yellow" href="index.php?autId=<?php echo $a["authorId"] ?>"><?php echo $a["authorName"] ?></a></p>
+            <p><?php echo $a["perex"] ?></p>
+            <a href="article.php?id=<?php echo $a["id"] ?>">
               <p class="flex underline text-yellow font-bold justify-end hover:cursor-pointer">Číst dál<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg></p>

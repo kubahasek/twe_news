@@ -51,15 +51,15 @@ $authors = getAuthors();
       <h1 class="text-white text-5xl uppercase font-bold">Autoři</h1>
       <?php foreach ($authors as $a) : ?>
         <div class="flex gap-2 items-center">
-          <h1 class="text-3xl"><a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?autId=<?= $a["authorId"] ?>"><?= $a["authorName"] ?></a> - <?= $a["numOfArticles"] ?> <?= $a["numOfArticles"] > 1 ? "články" : "článek" ?></h1>
+          <h1 class="text-3xl"><a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?autId=<?php echo $a["authorId"] ?>"><?php echo $a["authorName"] ?></a> - <?php echo $a["numOfArticles"] ?> <?php echo $a["numOfArticles"] > 1 ? "články" : "článek" ?></h1>
           <div class="flex gap-2">
-            <a href="/twe_news/authorForm.php?id=<?= $a["authorId"] ?>" class="hover:text-yellow cursor-pointer">
+            <a href="/twe_news/authorForm.php?id=<?php echo $a["authorId"] ?>" class="hover:text-yellow cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
               </svg>
             </a>
-            <a href="/twe_news/deleteAuthor.php?id=<?= $a["authorId"] ?>" class="hover:text-red cursor-pointer">
+            <a href="/twe_news/deleteAuthor.php?id=<?php echo $a["authorId"] ?>" class="hover:text-red cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                 <line x1="9" y1="9" x2="15" y2="15"></line>

@@ -2,7 +2,7 @@
 
 function run($sql, $data = [])
 {
-  require "db.php";
+  include "db.php";
   $stmt = $conn->prepare($sql);
   $stmt->execute($data);
   return $stmt->fetchAll();
@@ -10,14 +10,14 @@ function run($sql, $data = [])
 
 function delete($sql, $data = [])
 {
-  require "db.php";
+  include "db.php";
   $stmt = $conn->prepare($sql);
   $stmt->execute($data);
 }
 
 function insert($sql, $data = [])
 {
-  require "db.php";
+  include "db.php";
   $stmt = $conn->prepare($sql);
   $stmt->execute($data);
   return $conn->lastInsertId();
@@ -25,7 +25,7 @@ function insert($sql, $data = [])
 
 function update($sql, $data = [])
 {
-  require "db.php";
+  include "db.php";
   $stmt = $conn->prepare($sql);
   $stmt->execute($data);
 }
@@ -35,7 +35,7 @@ function getArticles(bool $all): array
   if ($all) {
     $sql = "
         SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, a.id as authorId FROM article ar
-        INNER JOIN author a on ar.author_id = a.id
+        INNER JOIN user a on ar.author_id = a.id
         INNER JOIN article_category ac on ar.id = ac.article_id
         INNER JOIN category c on ac.category_id = c.id
         GROUP BY ar.id
@@ -44,7 +44,7 @@ function getArticles(bool $all): array
   } else {
     $sql = "
         SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, a.id as authorId FROM article ar
-        INNER JOIN author a on ar.author_id = a.id
+        INNER JOIN user a on ar.author_id = a.id
         INNER JOIN article_category ac on ar.id = ac.article_id
         INNER JOIN category c on ac.category_id = c.id
         WHERE ar.public = 1
@@ -79,7 +79,7 @@ function getArticlesForCategory(int $id)
 {
   $sql = "
         SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, a.id as authorId FROM article ar
-        INNER JOIN author a on ar.author_id = a.id
+        INNER JOIN user a on ar.author_id = a.id
         INNER JOIN article_category ac on ar.id = ac.article_id
         INNER JOIN category c on ac.category_id = c.id
         WHERE c.id = :id
@@ -100,7 +100,7 @@ function getArticlesForAuthor(int $id)
 {
   $sql = "
         SELECT ar.*, concat(a.name, ' ', a.surname) as authorName, a.id as authorId FROM article ar
-        INNER JOIN author a on ar.author_id = a.id
+        INNER JOIN user a on ar.author_id = a.id
         INNER JOIN article_category ac on ar.id = ac.article_id
         INNER JOIN category c on ac.category_id = c.id
         WHERE a.id = :id
@@ -112,15 +112,16 @@ function getArticlesForAuthor(int $id)
 
 function getAuthorName(int $id)
 {
-  $sql = "SELECT concat(name, ' ', surname) as name FROM author WHERE id = :id";
+  $sql = "SELECT concat(name, ' ', surname) as name FROM user WHERE id = :id";
   $data = ["id" => $id,];
   return run($sql, $data);
 }
 
 function getAuthors()
 {
-  $sql = "SELECT concat(a.name, ' ', a.surname) as authorName, a.id as authorId, count(ar.id) as numOfArticles FROM author a
+  $sql = "SELECT concat(a.name, ' ', a.surname) as authorName, a.id as authorId, count(ar.id) as numOfArticles FROM user a
                 LEFT JOIN article ar on a.id = ar.author_id 
+                WHERE a.role_id = 3
                 GROUP BY a.id
                 ";
   return run($sql);
@@ -128,7 +129,7 @@ function getAuthors()
 
 function getAuthor(int $id)
 {
-  $sql = "SELECT *, count(ar.id) as numOfArticles FROM author a INNER JOIN article ar on a.id = ar.author_id WHERE a.id = :id";
+  $sql = "SELECT *, count(ar.id) as numOfArticles FROM user a INNER JOIN article ar on a.id = ar.author_id WHERE a.id = :id";
   $data = [
     "id" => $id,
   ];
@@ -137,7 +138,7 @@ function getAuthor(int $id)
 
 function getArticle(int $id)
 {
-  $sql = "SELECT article.*, concat(author.name, ' ', author.surname) as authorName, author.id as authorId from article  INNER JOIN author on article.author_id = author.id WHERE article.id = :id";
+  $sql = "SELECT article.*, concat(user.name, ' ', user.surname) as authorName, user.id as authorId from article  INNER JOIN user on article.author_id = user.id WHERE article.id = :id";
   $data = ["id" => $id,];
   return run($sql, $data);
 }
@@ -219,7 +220,7 @@ function createAuthor(string $name, string $surname)
 
 function updateAuthor(int $id, string $name, string $surname)
 {
-  $sql = "UPDATE author set name = :name, surname = :surname WHERE id = :id";
+  $sql = "UPDATE user set name = :name, surname = :surname WHERE id = :id";
   $data = [
     "name" => $name,
     "surname" => $surname,
@@ -230,7 +231,7 @@ function updateAuthor(int $id, string $name, string $surname)
 }
 function deleteAuthor(int $id)
 {
-  $sql = "DELETE FROM author WHERE id = :id";
+  $sql = "DELETE FROM user WHERE id = :id";
   $data = [
     "id" => $id,
   ];
@@ -315,5 +316,11 @@ function getAllComments()
 {
   $sql = "SELECT *, a.title FROM comments c INNER JOIN article a on c.article_id = a.id ORDER BY c.submitted_at desc";
 
+  return run($sql);
+}
+
+function getAllUsers()
+{
+  $sql = "SELECT * FROM user";
   return run($sql);
 }
