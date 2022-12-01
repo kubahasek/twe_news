@@ -30,6 +30,14 @@ function update($sql, $data = [])
   $stmt->execute($data);
 }
 
+function IsSignedIn(){
+  if (isset($_SESSION["user"])) {
+    return true;
+  } else {
+    // return header("LOCATION: /twe_news/login.php"); // TODO:Uncomment after ready  
+  }
+}
+
 function getArticles(bool $all): array
 {
   if ($all) {
@@ -317,6 +325,43 @@ function getAllComments()
   $sql = "SELECT *, a.title FROM comments c INNER JOIN article a on c.article_id = a.id ORDER BY c.submitted_at desc";
 
   return run($sql);
+}
+
+function login($email, $pass){
+  $sql = "SELECT * FROM user u INNER JOIN role r ON u.role_id = r.id WHERE email = :email";
+  $data = [
+    "email" => $email,
+  ];
+
+  $user = run($sql, $data);
+  if(!$user){
+    return header("LOCATION: /twe_news/login.php?msg=noaccount");
+    die();
+  } else {
+    if(password_verify($pass, $user[0]["password"])){
+      $_SESSION["user"] = $user;
+      return header("LOCATION: /twe_news/login.php");
+      die();
+    } else {
+      return header("LOCATION: /twe_news/login.php?msg=badlogin");
+      die();
+    }
+  }
+}
+
+function signUp($name, $surname, $email, $pass){
+  $hash = password_hash($pass, PASSWORD_BCRYPT);
+
+  $sql = "INSERT INTO user (name, surname, email, password) VALUES (:name, :surname, :email, :password)";
+  $data = [
+    "name" => $name,
+    "surname" => $surname,
+    "email" => $email,
+    "password" => $hash,
+  ];
+
+  insert($sql, $data);
+  return header("LOCATION: /twe_news/login.php");
 }
 
 function getAllUsers()

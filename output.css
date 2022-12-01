@@ -696,30 +696,6 @@ video {
   width: 90%;
 }
 
-.w-1\/6 {
-  width: 16.666667%;
-}
-
-.w-0\.5 {
-  width: 0.125rem;
-}
-
-.w-0 {
-  width: 0px;
-}
-
-.w-1\.5 {
-  width: 0.375rem;
-}
-
-.w-1 {
-  width: 0.25rem;
-}
-
-.w-9 {
-  width: 2.25rem;
-}
-
 .w-11 {
   width: 2.75rem;
 }
@@ -946,6 +922,11 @@ video {
 .text-grey {
   --tw-text-opacity: 1;
   color: rgb(201 197 203 / var(--tw-text-opacity));
+}
+
+.text-red {
+  --tw-text-opacity: 1;
+  color: rgb(255 0 0 / var(--tw-text-opacity));
 }
 
 .underline {
