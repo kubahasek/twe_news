@@ -1,11 +1,16 @@
 <?php
 require "utils.php";
+session_start();
+if (!IsSignedIn() || IsSignedIn() && $_SESSION["user"]["role"] != "admin") {
+    header("LOCATION: /twe_news/login.php?msg=needlogin");
+    die();
+}
 if (!empty($_POST) && isset($_POST) && !isset($_GET["id"])) {
-  createCategory($_POST["name"], $_POST["surname"]);
-  header("LOCATION: /twe_news/administration.php");
+    createCategory($_POST["name"], $_POST["surname"]);
+    header("LOCATION: /twe_news/administration.php");
 } else if (!empty($_POST) && isset($_POST) && isset($_GET["id"])) {
-  updateCategory($_GET["id"], $_POST["name"], $_POST["surname"]);
-  header("LOCATION: /twe_news/administration.php");
+    updateCategory($_GET["id"], $_POST["name"], $_POST["surname"]);
+    header("LOCATION: /twe_news/administration.php");
 }
 ?>
 <html lang="en">
@@ -23,7 +28,7 @@ if (!empty($_POST) && isset($_POST) && !isset($_GET["id"])) {
 </head>
 <?php
 if (isset($_GET["id"])) {
-  $category = getCategory($_GET["id"]);
+    $category = getCategory($_GET["id"]);
 }
 ?>
 
@@ -51,26 +56,38 @@ if (isset($_GET["id"])) {
           <li>
             <a href="/twe_news/author.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Autoři</a>
           </li>
-          <li>
-            <a href="#" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Administrace</a>
-          </li>
-          <li>
-            <a href="/twe_news/addArticle.php" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Přidat</a>
-          </li>
+          <?php if (!isset($_SESSION["user"])) : ?>
+            <li>
+              <a href="/twe_news/login.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Přihlásit</a>
+            </li>
+          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "admin") : ?>
+            <li>
+              <a href="/twe_news/administration.php" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Administrace</a>
+            </li>
+          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "author") : ?>
+            <li>
+              <a href="/twe_news/addArticle.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Přidat</a>
+            </li>
+          <?php endif; ?>
+          <?php if (isset($_SESSION["user"])) : ?>
+            <li class="flex gap-2 items-center">
+              <p href="/twe_news/signOut.php" aria-current="page"><?php echo $_SESSION["user"]["name"] ?> <?php echo $_SESSION["user"]["surname"] ?></p><a href="/twe_news/signOut.php" class="block py-2 pr-4 pl-3 text-white font-bold hover:text-red rounded md:bg-dark md:p-0">Odhlásit</a>
+            </li>
+          <?php endif; ?>
         </ul>
       </div>
     </div>
   </nav>
   <main>
     <div class="container mx-auto mt-5 md:p-0 px-2">
-      <h1 class="text-white text-3xl md:text-5xl uppercase font-bold"><?= isset($_GET["id"]) ? "Upravit" : "Přidat" ?> Kategorii</h1>
+      <h1 class="text-white text-3xl md:text-5xl uppercase font-bold"><?php echo isset($_GET["id"]) ? "Upravit" : "Přidat" ?> Kategorii</h1>
       <div class="text-white mt-4">
         <form class="flex flex-col gap-4" action="" method="post">
           <div>
             <label for="articleName" class="block mb-2 text-sm font-medium text-white">Jméno</label>
-            <input type="text" id="articleName" name="name" value="<?= isset($_GET["id"]) ? $category[0]["name"] : null ?>" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+            <input type="text" id="articleName" name="name" value="<?php echo isset($_GET["id"]) ? $category[0]["name"] : null ?>" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
           </div>
-          <button type="submit" class="text-dark bg-yellow hover:bg-violet focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><?= isset($_GET["id"]) ? "Upravit" : "Přidat" ?></button>
+          <button type="submit" class="text-dark bg-yellow hover:bg-violet focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><?php echo isset($_GET["id"]) ? "Upravit" : "Přidat" ?></button>
         </form>
       </div>
   </main>

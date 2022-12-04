@@ -9,6 +9,7 @@
 </head>
 <?php
 require "utils.php";
+session_start();
 $categories = getCategories();
 ?>
 
@@ -36,12 +37,24 @@ $categories = getCategories();
           <li>
             <a href="/twe_news/author.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Autoři</a>
           </li>
-          <li>
-            <a href="/twe_news/administration.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Administrace</a>
-          </li>
-          <li>
-            <a href="/twe_news/addArticle.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Přidat</a>
-          </li>
+          <?php if (!isset($_SESSION["user"])) : ?>
+            <li>
+              <a href="/twe_news/login.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Přihlásit</a>
+            </li>
+          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "admin") : ?>
+            <li>
+              <a href="/twe_news/administration.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Administrace</a>
+            </li>
+          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "author") : ?>
+            <li>
+              <a href="/twe_news/addArticle.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Přidat</a>
+            </li>
+          <?php endif; ?>
+          <?php if (isset($_SESSION["user"])) : ?>
+            <li class="flex gap-2 items-center">
+              <p href="/twe_news/signOut.php" aria-current="page"><?php echo $_SESSION["user"]["name"] ?> <?php echo $_SESSION["user"]["surname"] ?></p><a href="/twe_news/signOut.php" class="block py-2 pr-4 pl-3 text-white font-bold hover:text-red rounded md:bg-dark md:p-0">Odhlásit</a>
+            </li>
+          <?php endif; ?>
         </ul>
       </div>
     </div>
@@ -51,22 +64,24 @@ $categories = getCategories();
       <h1 class="text-white text-5xl uppercase font-bold">Kategorie</h1>
       <?php foreach ($categories as $c) : ?>
         <div class="flex gap-2 items-center">
-          <h1 class="text-3xl"><a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?catId=<?= $c["id"] ?>"><?= $c["name"] ?></a> - <?= $c["numOfArticles"] ?> <?= $c["numOfArticles"] > 1 ? "články" : "článek" ?></h1>
-          <div class="flex gap-2">
-            <a href="/twe_news/categoryForm.php?id=<?= $c["id"] ?>" class="hover:text-yellow cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-              </svg>
-            </a>
-            <a href="/twe_news/deleteCategory.php?id=<?= $c["id"] ?>" class="hover:text-red cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="9" y1="9" x2="15" y2="15"></line>
-                <line x1="15" y1="9" x2="9" y2="15"></line>
-              </svg>
-            </a>
-          </div>
+          <h1 class="text-3xl"><a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?catId=<?php echo $c["id"] ?>"><?php echo $c["name"] ?></a> - <?php echo $c["numOfArticles"] ?> <?php echo $c["numOfArticles"] > 1 ? "články" : "článek" ?></h1>
+          <?php if (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "admin") : ?>
+            <div class="flex gap-2">
+              <a href="/twe_news/categoryForm.php?id=<?php echo $c["id"] ?>" class="hover:text-yellow cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </a>
+              <a href="/twe_news/deleteCategory.php?id=<?php echo $c["id"] ?>" class="hover:text-red cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="9" x2="15" y2="15"></line>
+                  <line x1="15" y1="9" x2="9" y2="15"></line>
+                </svg>
+              </a>
+            </div>
+          <?php endif; ?>
         </div>
       <?php endforeach; ?>
   </main>

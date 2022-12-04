@@ -10,7 +10,6 @@
 <?php
 require "utils.php";
 session_start();
-if(isset($_SESSION))
 $articles = getArticles(false);
 if (isset($_GET["catId"])) {
   $articles = getArticlesForCategory($_GET["catId"]);
@@ -45,23 +44,23 @@ if (isset($_GET["catId"])) {
           <li>
             <a href="/twe_news/author.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Autoři</a>
           </li>
-          <?php if(!isset($_SESSION["user"])): ?>
-          <li>
-            <a href="/twe_news/login.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Přihlásit</a>
-          </li>
-          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "admin"): ?>
-          <li>
-            <a href="/twe_news/administration.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Administrace</a>
-          </li>
-          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "author"): ?>
-          <li>
-            <a href="/twe_news/addArticle.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Přidat</a>
-          </li>
+          <?php if (!isset($_SESSION["user"])) : ?>
+            <li>
+              <a href="/twe_news/login.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Přihlásit</a>
+            </li>
+          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "admin") : ?>
+            <li>
+              <a href="/twe_news/administration.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Administrace</a>
+            </li>
+          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "author") : ?>
+            <li>
+              <a href="/twe_news/addArticle.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Přidat</a>
+            </li>
           <?php endif; ?>
-          <?php if (isset($_SESSION["user"])): ?>
-          <li class="flex gap-2 items-center">
-            <p href="/twe_news/signOut.php"  aria-current="page"><?= $_SESSION["user"]["name"] ?> <?= $_SESSION["user"]["surname"] ?></p><a href="/twe_news/signOut.php" class="block py-2 pr-4 pl-3 text-white font-bold hover:text-red rounded md:bg-dark md:p-0">Odhlásit</a>
-          </li>
+          <?php if (isset($_SESSION["user"])) : ?>
+            <li class="flex gap-2 items-center">
+              <p href="/twe_news/signOut.php" aria-current="page"><?php echo $_SESSION["user"]["name"] ?> <?php echo $_SESSION["user"]["surname"] ?></p><a href="/twe_news/signOut.php" class="block py-2 pr-4 pl-3 text-white font-bold hover:text-red rounded md:bg-dark md:p-0">Odhlásit</a>
+            </li>
           <?php endif; ?>
         </ul>
       </div>

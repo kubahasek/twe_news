@@ -1,16 +1,36 @@
+<?php
+require "utils.php";
+session_start();
+if (!IsSignedIn() || IsSignedIn() && $_SESSION["user"]["role"] != "admin") {
+    header("LOCATION: /twe_news/login.php?msg=needlogin");
+    die();
+}
+if (!empty($_POST) && isset($_POST) && isset($_GET["id"])) {
+    updateUser($_GET["id"], $_POST["name"], $_POST["surname"], $_POST["email"], $_POST["role"]);
+    header("LOCATION: /twe_news/administration.php");
+}
+?>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.3/dist/flowbite.min.css" />
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+  <link rel="stylesheet" href="quill.css">
+  <link rel="stylesheet" href="article.css">
   <link rel="stylesheet" href="output.css">
   <title>The #1 trusted news source!</title>
 </head>
 <?php
-require "utils.php";
-session_start();
-$authors = getAuthors();
+if (isset($_GET["id"])) {
+    $user = getUser($_GET["id"]);
+    $roles = getAllRoles();
+} else {
+    header("LOCATION: /twe_news/");
+    die();
+}
 ?>
 
 <body class="bg-dark text-white">
@@ -35,7 +55,7 @@ $authors = getAuthors();
             <a href="/twe_news/category.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Kategorie</a>
           </li>
           <li>
-            <a href="/twe_news/author.php" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Autoři</a>
+            <a href="/twe_news/author.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Autoři</a>
           </li>
           <?php if (!isset($_SESSION["user"])) : ?>
             <li>
@@ -43,7 +63,7 @@ $authors = getAuthors();
             </li>
           <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "admin") : ?>
             <li>
-              <a href="/twe_news/administration.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Administrace</a>
+              <a href="/twe_news/administration.php" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Administrace</a>
             </li>
           <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "author") : ?>
             <li>
@@ -61,23 +81,32 @@ $authors = getAuthors();
   </nav>
   <main>
     <div class="container mx-auto mt-5 md:p-0 px-2">
-      <h1 class="text-white text-5xl uppercase font-bold">Autoři</h1>
-      <?php foreach ($authors as $a) : ?>
-        <div class="flex gap-2 items-center">
-          <h1 class="text-3xl"><a class="cursor-pointer text-yellow underline" href="/twe_news/index.php?autId=<?php echo $a["authorId"] ?>"><?php echo $a["authorName"] ?></a> - <?php echo $a["numOfArticles"] ?> <?php echo $a["numOfArticles"] > 1 ? "články" : "článek" ?></h1>
-            <?php if (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "admin") : ?>
-            <div class="flex gap-2">
-              <a href="/twe_news/userForm.php?id=<?php echo $a["authorId"] ?>" class="hover:text-yellow cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
-              </a>
-            </div>
-            <?php endif; ?>
-        </div>
-      <?php endforeach; ?>
-    </div>
+      <h1 class="text-white text-3xl md:text-5xl uppercase font-bold">Upravit uživatele</h1>
+      <div class="text-white mt-4">
+        <form class="flex flex-col gap-4" action="" method="post">
+          <div>
+            <label for="userName" class="block mb-2 text-sm font-medium text-white">Jméno</label>
+            <input type="text" id="userName" name="name" value="<?php echo isset($_GET["id"]) ? $user[0]["name"] : null ?>" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+          </div>
+          <div>
+            <label for="userSurname" class="block mb-2 text-sm font-medium text-white">Příjmení</label>
+            <input type="text" id="userSurname" name="surname" value="<?php echo isset($_GET["id"]) ? $user[0]["surname"] : null ?>" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+          </div>
+          <div>
+            <label for="userEmail" class="block mb-2 text-sm font-medium text-white">Email</label>
+            <input type="email" id="userEmail" name="email" value="<?php echo isset($_GET["id"]) ? $user[0]["email"] : null ?>" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+          </div>
+          <div>
+            <label for="roles" class="block mb-2 text-sm font-medium text-white">Role</label>
+            <select id="roles" name="role" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+              <?php foreach ($roles as $r) : ?>
+                <option value="<?php echo $r['id'] ?>" <?php echo (isset($_GET["id"]) && $user[0]["role_id"] == $r["id"] ? "selected" : "") ?>><?php echo $r["name"] ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <button type="submit" class="text-dark bg-yellow hover:bg-violet focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><?php echo isset($_GET["id"]) ? "Upravit" : "Přidat" ?></button>
+        </form>
+      </div>
   </main>
   <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
 </body>

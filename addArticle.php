@@ -1,21 +1,35 @@
 <?php
 require "utils.php";
+session_start();
 
+if (!IsSignedIn() || (IsSignedIn() && $_SESSION["user"]["role"] != "admin")) {
+    if ($_SESSION["user"]["role"] != "author") {
+        header("LOCATION: /twe_news/login.php?msg=needlogin");
+        die();
+    }
+}
 $categoriesForArticleIds = [];
 if (!empty($_POST) && isset($_POST) && !isset($_GET["id"])) {
-  $articleId = createArticle($_POST["articleName"], $_POST["perex"], $_POST["category"], $_POST["author"], $_POST["articleContent"], isset($_POST['public']) ? 1 : 0);
-  header("Location: /twe_news/article.php?id=" . $articleId);
+    $articleId = createArticle($_POST["articleName"], $_POST["perex"], $_POST["category"], $_POST["author"], $_POST["articleContent"], isset($_POST['public']) ? 1 : 0);
+    header("Location: /twe_news/article.php?id=" . $articleId);
 } else if (!empty($_POST) && isset($_POST) && isset($_GET["id"])) {
-  updateArticle($_GET["id"], $_POST["articleName"], $_POST["perex"], $_POST["category"], $_POST["author"], $_POST["articleContent"], isset($_POST['public']) ? 1 : 0);
-  header("Location: /twe_news/article.php?id=" . $_GET["id"]);
+    updateArticle($_GET["id"], $_POST["articleName"], $_POST["perex"], $_POST["category"], $_POST["author"], $_POST["articleContent"], isset($_POST['public']) ? 1 : 0);
+    header("Location: /twe_news/article.php?id=" . $_GET["id"]);
 }
 
 if (isset($_GET["id"])) {
-  $article = getArticle($_GET["id"]);
-  $categoriesForArticle = getCategoriesForArticle($_GET["id"]);
-  $categoriesForArticleIds = array_map(function ($c) {
-    return $c["id"];
-  }, $categoriesForArticle);
+    $article = getArticle($_GET["id"]);
+    if ($_SESSION["user"]["id"] != $article[0]["author_id"] && $_SESSION["user"]["role"] != "admin") {
+        header("LOCATION: /twe_news");
+        die();
+    }
+    $categoriesForArticle = getCategoriesForArticle($_GET["id"]);
+    $categoriesForArticleIds = array_map(
+        function ($c) {
+            return $c["id"];
+        },
+        $categoriesForArticle
+    );
 }
 
 ?>
@@ -63,12 +77,24 @@ $authors = getAuthors();
           <li>
             <a href="/twe_news/author.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Autoři</a>
           </li>
-          <li>
-            <a href="/twe_news/administration.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Administrace</a>
-          </li>
-          <li>
-            <a href="/twe_news/addArticle.php" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Přidat</a>
-          </li>
+          <?php if (!isset($_SESSION["user"])) : ?>
+            <li>
+              <a href="/twe_news/login.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Přihlásit</a>
+            </li>
+          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "admin") : ?>
+            <li>
+              <a href="/twe_news/administration.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Administrace</a>
+            </li>
+          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "author") : ?>
+            <li>
+              <a href="/twe_news/addArticle.php" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Přidat</a>
+            </li>
+          <?php endif; ?>
+          <?php if (isset($_SESSION["user"])) : ?>
+            <li class="flex gap-2 items-center">
+              <p href="/twe_news/signOut.php" aria-current="page" class="m-0"><?php echo $_SESSION["user"]["name"] ?> <?php echo $_SESSION["user"]["surname"] ?></p><a href="/twe_news/signOut.php" class="block py-2 pr-4 pl-3 text-white font-bold hover:text-red rounded md:bg-dark md:p-0">Odhlásit</a>
+            </li>
+          <?php endif; ?>
         </ul>
       </div>
     </div>
@@ -80,21 +106,21 @@ $authors = getAuthors();
         <form class="flex flex-col gap-4" action="" method="post">
           <div>
             <label for="articleName" class="block mb-2 text-sm font-medium text-white">Název článku</label>
-            <input type="text" id="articleName" name="articleName" value="<?= isset($_GET["id"]) ? $article[0]["title"] : null ?>" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Sick name man..." required>
+            <input type="text" id="articleName" name="articleName" value="<?php echo isset($_GET["id"]) ? $article[0]["title"] : null ?>" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Sick name man..." required>
           </div>
           <div>
             <label for="category" class="block mb-2 text-sm font-medium text-white">Kategorie</label>
             <div class="flex gap-2 items-center">
               <?php foreach ($categories as $c) : ?>
-                <?php if (in_array($c["id"], $categoriesForArticleIds)) : ?>
+                    <?php if (in_array($c["id"], $categoriesForArticleIds)) : ?>
                   <div>
-                    <input id="checkbox-<?= $c["id"] ?>" name="category[]" type="checkbox" value="<?= $c["id"] ?>" checked class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500">
-                    <label for="checkbox-<?= $c["id"] ?>" class="text-sm font-medium text-white"><?= $c["name"] ?></label>
+                    <input id="checkbox-<?php echo $c["id"] ?>" name="category[]" type="checkbox" value="<?php echo $c["id"] ?>" checked class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500">
+                    <label for="checkbox-<?php echo $c["id"] ?>" class="text-sm font-medium text-white"><?php echo $c["name"] ?></label>
                   </div>
                 <?php else : ?>
                   <div>
-                    <input id="checkbox-<?= $c["id"] ?>" name="category[]" type="checkbox" value="<?= $c["id"] ?>" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500">
-                    <label for="checkbox-<?= $c["id"] ?>" class="text-sm font-medium text-white"><?= $c["name"] ?></label>
+                    <input id="checkbox-<?php echo $c["id"] ?>" name="category[]" type="checkbox" value="<?php echo $c["id"] ?>" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500">
+                    <label for="checkbox-<?php echo $c["id"] ?>" class="text-sm font-medium text-white"><?php echo $c["name"] ?></label>
                   </div>
                 <?php endif; ?>
               <?php endforeach; ?>
@@ -102,16 +128,16 @@ $authors = getAuthors();
           </div>
           <div>
             <label for="authors" class="block mb-2 text-sm font-medium text-white">Autor</label>
-            <select id="authors" name="author" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
-              <option <?= isset($_GET["id"]) ? "" : "selected" ?> hidden>Vyberte autora</option>
+            <select id="authors" name="author" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" <?php echo isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "author" ? "disabled" : "" ?> required>
+              <option <?php echo isset($_GET["id"]) ? "" : "selected" ?> hidden>Vyberte autora</option>
               <?php foreach ($authors as $a) : ?>
-                <option value="<?= $a['authorId'] ?>" <?= isset($_GET["id"]) && $article[0]["authorId"] == $a["authorId"] ? "selected" : "" ?>><?= $a["authorName"] ?></option>
+                <option value="<?php echo $a['authorId'] ?>" <?php echo (isset($_GET["id"]) && $article[0]["authorId"] == $a["authorId"]) || (isset($_SESSION["user"]) && $_SESSION["user"]["id"] === $a["authorId"]) ? "selected" : "" ?>><?php echo $a["authorName"] ?></option>
               <?php endforeach; ?>
             </select>
           </div>
           <div>
             <label for="perex" class="block mb-2 text-sm font-medium text-white dark:text-gray-300">Perex</label>
-            <input type="text" id="perex" name="perex" value="<?= isset($_GET["id"]) ? $article[0]["perex"] : null ?>" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Sick name man..." required>
+            <input type="text" id="perex" name="perex" value="<?php echo isset($_GET["id"]) ? $article[0]["perex"] : null ?>" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Sick name man..." required>
           </div>
           <div>
             <label class="block mb-2 text-sm font-medium text-white dark:text-gray-300">Obsah článku</label>
@@ -122,16 +148,18 @@ $authors = getAuthors();
             <input type="text" name="articleContent" id="articleContent" hidden>
           </div>
           <div>
-            <input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500" <?= isset($article[0]["public"]) && $article[0]["public"] == 1 ? "checked" : "" ?> value="1" name="public" id="publicCheckbox">
+            <input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500" <?php echo isset($article[0]["public"]) && $article[0]["public"] == 1 ? "checked" : "" ?> value="1" name="public" id="publicCheckbox">
             <label for="publicCheckbox">Veřejný</label>
           </div>
-          <button type="submit" class="text-dark bg-yellow hover:bg-violet focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><?= isset($_GET["id"]) ? "Upravit" : "Přidat" ?></button>
+          <button type="submit" class="text-dark bg-yellow hover:bg-violet focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><?php echo isset($_GET["id"]) ? "Upravit" : "Přidat" ?></button>
         </form>
       </div>
   </main>
   <script type="text/javascript">
     let htmlFromDB = null;
-    htmlFromDB = <?php if (isset($_GET["id"])) echo json_encode(($article[0]["text"])); ?>;
+    htmlFromDB = <?php if (isset($_GET["id"])) {
+                    echo json_encode(($article[0]["text"]));
+} ?>;
   </script>
   <script src="./Quill.js"></script>
   <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>

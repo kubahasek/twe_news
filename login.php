@@ -1,20 +1,26 @@
 <?php
 require "utils.php";
 session_start();
-if(isset($_POST["email"])) {
+if (isset($_POST["email"])) {
     login($_POST["email"], $_POST["pass"]);
 }
 if (isset($_GET["msg"])) {
     switch ($_GET["msg"]) {
-        case 'noaccount':
-            $msg = "Nebyl nalezen účet s tímto emailem.";
-            break;
-        case 'badlogin':
-            $msg = "Byly zadány špatné přihlašovací údaje";
-            break;
+    case 'noaccount':
+        $msg = "Nebyl nalezen účet s tímto emailem.";
+        break;
+    case 'badlogin':
+        $msg = "Byly zadány špatné přihlašovací údaje";
+        break;
+    case "needlogin":
+        $msg = "Na přístup na tuto stránku je potřeba přihlášení s adekvátní rolí";
+        break;
+    case "accdisabled":
+        $msg = "Váš účet byl deaktivován, kontaktujte administrátora pro jeho obnovení";
+        break;
     }
 }
-if(IsSignedIn()) {
+if (IsSignedIn()) {
     header("LOCATION: /twe_news/");
     die();
 }
@@ -32,6 +38,7 @@ if(IsSignedIn()) {
   <link rel="stylesheet" href="output.css">
   <title>The #1 trusted news source!</title>
 </head>
+
 <body class="bg-dark text-white">
   <!-- colors: https://coolors.co/2e3532-ffbf00-c9c5cb-648767-7f2ccb -->
   <nav class="bg-violet text-gray border-gray-200 px-2 sm:px-4 py-2.5 rounded shadow-xl">
@@ -56,18 +63,18 @@ if(IsSignedIn()) {
           <li>
             <a href="/twe_news/author.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Autoři</a>
           </li>
-          <?php if(!isset($_SESSION["user"])): ?>
-          <li>
-            <a href="/twe_news/login.php" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Přihlásit</a>
-          </li>
-          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "admin"): ?>
-          <li>
-            <a href="/twe_news/administration.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Administrace</a>
-          </li>
-          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "author"): ?>
-          <li>
-            <a href="/twe_news/addArticle.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Přidat</a>
-          </li>
+          <?php if (!isset($_SESSION["user"])) : ?>
+            <li>
+              <a href="/twe_news/login.php" class="block py-2 pr-4 pl-3 text-dark bg-yellow rounded md:bg-dark md:text-yellow md:p-0" aria-current="page">Přihlásit</a>
+            </li>
+          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "admin") : ?>
+            <li>
+              <a href="/twe_news/administration.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Administrace</a>
+            </li>
+          <?php elseif (isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "author") : ?>
+            <li>
+              <a href="/twe_news/addArticle.php" class="block py-2 pr-4 pl-3 text-white hover:text-yellow rounded md:bg-dark md:p-0 " aria-current="page">Přidat</a>
+            </li>
           <?php endif; ?>
         </ul>
       </div>
@@ -77,10 +84,11 @@ if(IsSignedIn()) {
     <div class="container mx-auto mt-5 md:p-0 px-2">
       <h1 class="text-white text-3xl md:text-5xl uppercase font-bold">Přihlášení</h1>
       <div class="text-white mt-4">
-          <?php if(isset($msg)): ?>
-            <p class="text-red mb-4"><?= $msg ?></p>
-          <?php endif; ?>
-        <form class="flex flex-col gap-4" action="" method="post">
+        <p>Pokud nemáte účet, vytvořte is ho! <a class="underline text-yellow" href="/twe_news/signup.php">Zaregistrovat se</a></p>
+        <?php if (isset($msg)) : ?>
+          <p class="text-red mb-4"><?php echo $msg ?></p>
+        <?php endif; ?>
+        <form class="flex flex-col gap-4 mt-4" action="" method="post">
           <div>
             <label for="username" class="block mb-2 text-sm font-medium text-white">Email</label>
             <input type="email" id="username" name="email" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
