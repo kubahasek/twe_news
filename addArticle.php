@@ -128,7 +128,7 @@ $authors = getAuthors();
           </div>
           <div>
             <label for="authors" class="block mb-2 text-sm font-medium text-white">Autor</label>
-            <select id="authors" name="author" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" <?php echo isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "author" ? "disabled" : "" ?> required>
+            <select id="authors" name="author" class="bg-dark disabled:opacity-[40%] border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" <?php echo isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "author" ? "disabled" : "" ?> required>
               <option <?php echo isset($_GET["id"]) ? "" : "selected" ?> hidden>Vyberte autora</option>
               <?php foreach ($authors as $a) : ?>
                 <option value="<?php echo $a['authorId'] ?>" <?php echo (isset($_GET["id"]) && $article[0]["authorId"] == $a["authorId"]) || (isset($_SESSION["user"]) && $_SESSION["user"]["id"] === $a["authorId"]) ? "selected" : "" ?>><?php echo $a["authorName"] ?></option>
