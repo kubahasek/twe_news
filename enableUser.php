@@ -6,10 +6,16 @@ if (!isset($_GET["id"])) {
     die();
 }
 session_start();
+
 if ($_SESSION["user"]["role"] != "admin") {
-    header("LOCATION: /twe_news/login.php?msg=needlogin");
-    die();
+    if(!IsSignedIn()) {
+        header("LOCATION: /twe_news/login.php?msg=needlogin");
+        die();
+    }
+    header("LOCATION: /twe_news/?toast=true&message=Je potřeba účet administrátora&color=red&redirect=/twe_news");
+    die(); 
 }
+
 
 $user = getUser($_GET["id"]);
 

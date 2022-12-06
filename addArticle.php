@@ -20,7 +20,7 @@ if (!empty($_POST) && isset($_POST) && !isset($_GET["id"])) {
 if (isset($_GET["id"])) {
     $article = getArticle($_GET["id"]);
     if ($_SESSION["user"]["id"] != $article[0]["author_id"] && $_SESSION["user"]["role"] != "admin") {
-        header("LOCATION: /twe_news");
+        header("LOCATION: /twe_news?toast=true&message=Nelze editovat článek jiného autora.&color=red&redirect=/twe_news");
         die();
     }
     $categoriesForArticle = getCategoriesForArticle($_GET["id"]);
@@ -152,6 +152,7 @@ $authors = getAuthors();
             <label for="publicCheckbox">Veřejný</label>
           </div>
           <button type="submit" class="text-dark bg-yellow hover:bg-violet focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><?php echo isset($_GET["id"]) ? "Upravit" : "Přidat" ?></button>
+          <?php echo isset($_SESSION["user"]) && $_SESSION["user"]["role"] == "author" ? "<input type='hidden' value='".$_SESSION["user"]["id"]."' name='author' >" : "" ?>
         </form>
       </div>
   </main>

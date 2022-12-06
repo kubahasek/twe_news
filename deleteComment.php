@@ -6,5 +6,15 @@ if (!isset($_GET["id"])) {
   die();
 }
 
+
+if ($_SESSION["user"]["role"] != "admin") {
+    if(!IsSignedIn()) {
+        header("LOCATION: /twe_news/login.php?msg=needlogin");
+        die();
+    }
+    header("LOCATION: /twe_news/?toast=true&message=Je potřeba účet administrátora&color=red&redirect=/twe_news");
+    die(); 
+}
+
 deleteComment($_GET["id"]);
 echo "<script>document.referrer ? window.location = document.referrer : history.back()</script>";

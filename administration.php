@@ -11,7 +11,11 @@
 require "utils.php";
 session_start();
 if (!IsSignedIn() || IsSignedIn() && $_SESSION["user"]["role"] != "admin") {
-    header("LOCATION: /twe_news/login.php?msg=needlogin");
+    if(!IsSignedIn()) {
+      header("LOCATION: /twe_news/login.php?msg=needlogin");
+      die(); 
+    }
+    header("LOCATION: /twe_news/?toast=true&message=Je potřeba účet administrátora&color=red&redirect=/twe_news");
     die();
 }
 $categories = getCategories();

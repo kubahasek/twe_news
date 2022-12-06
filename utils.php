@@ -32,11 +32,17 @@ function update($sql, $data = [])
 
 function IsSignedIn()
 {
-    if (isset($_SESSION["user"])) {
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+
+    /*if (isset($_SESSION["user"])) {
         return true;
     } else {
-        // return header("LOCATION: /twe_news/login.php"); // TODO:Uncomment after ready  
-    }
+        return false;
+    }*/
+
+   return isset($_SESSION["user"]);
 }
 
 function getArticles(bool $all): array
