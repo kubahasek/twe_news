@@ -10,10 +10,22 @@ if (!IsSignedIn() || (IsSignedIn() && $_SESSION["user"]["role"] != "admin")) {
 }
 $categoriesForArticleIds = [];
 if (!empty($_POST) && isset($_POST) && !isset($_GET["id"])) {
-    $articleId = createArticle($_POST["articleName"], $_POST["perex"], $_POST["category"], $_POST["author"], $_POST["articleContent"], isset($_POST['public']) ? 1 : 0);
+    $fileName = $_FILES['image']['name'];
+    $fileTmpName  = $_FILES['image']['tmp_name'];
+    $fileExtension = strtolower(end(explode('.',$fileName)));
+    $uploadPath = "uploads/" . basename(uniqid()). "." . $fileExtension;
+    move_uploaded_file($fileTmpName, $uploadPath);
+    $articleId = createArticle($_POST["articleName"], $_POST["perex"], $_POST["category"], $_POST["author"], $_POST["articleContent"], $uploadPath, isset($_POST['public']) ? 1 : 0);
     header("Location: /twe_news/article.php?id=" . $articleId);
 } else if (!empty($_POST) && isset($_POST) && isset($_GET["id"])) {
-    updateArticle($_GET["id"], $_POST["articleName"], $_POST["perex"], $_POST["category"], $_POST["author"], $_POST["articleContent"], isset($_POST['public']) ? 1 : 0);
+    $article = getArticle($_GET["id"]);
+    unlink($article[0]["image"]);
+    $fileName = $_FILES['image']['name'];
+    $fileTmpName  = $_FILES['image']['tmp_name'];
+    $fileExtension = strtolower(end(explode('.',$fileName)));
+    $uploadPath = "uploads/" . basename(uniqid()). "." . $fileExtension;
+    move_uploaded_file($fileTmpName, $uploadPath);
+    updateArticle($_GET["id"], $_POST["articleName"], $_POST["perex"], $_POST["category"], $_POST["author"], $_POST["articleContent"], $uploadPath, isset($_POST['public']) ? 1 : 0);
     header("Location: /twe_news/article.php?id=" . $_GET["id"]);
 }
 
@@ -103,7 +115,7 @@ $authors = getAuthors();
     <div class="container mx-auto mt-5 md:p-0 px-2">
       <h1 class="text-white text-3xl md:text-5xl uppercase font-bold">Přidat článek</h1>
       <div class="text-white mt-4">
-        <form class="flex flex-col gap-4" action="" method="post">
+        <form class="flex flex-col gap-4" action="" method="post" enctype="multipart/form-data">
           <div>
             <label for="articleName" class="block mb-2 text-sm font-medium text-white">Název článku</label>
             <input type="text" id="articleName" name="articleName" value="<?php echo isset($_GET["id"]) ? $article[0]["title"] : null ?>" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Sick name man..." required>
@@ -138,6 +150,10 @@ $authors = getAuthors();
           <div>
             <label for="perex" class="block mb-2 text-sm font-medium text-white dark:text-gray-300">Perex</label>
             <input type="text" id="perex" name="perex" value="<?php echo isset($_GET["id"]) ? $article[0]["perex"] : null ?>" class="bg-dark border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Sick name man..." required>
+          </div>
+          <div>
+            <label for="photo" class="block mb-2 text-sm font-medium text-white dark:text-gray-300">Foto</label>
+            <input type="file" id="photo" name="image" class="bg-dark text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Sick name man..." required>
           </div>
           <div>
             <label class="block mb-2 text-sm font-medium text-white dark:text-gray-300">Obsah článku</label>

@@ -108,6 +108,7 @@ if (isset($_GET["id"])) {
             <?php endif; ?>
             <p><?php echo date_format(date_create($article[0]["created_at"]), "d.m.Y H:i") ?> <a class="underline text-yellow" href="index.php?autId=<?php echo $article[0]["authorId"] ?>"><?php echo $article[0]["authorName"] ?></a></p>
             <div class="mb-5">
+              <img src="<?= $article[0]["image"] ?>" />
               <?php echo $article[0]["text"] ?>
             </div>
           </div>

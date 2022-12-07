@@ -169,14 +169,15 @@ function getCategoriesForArticle(int $id)
     return run($sql, $data);
 }
 
-function createArticle(string $name, string $perex, array $categories, string $author, string $content, int $public)
+function createArticle(string $name, string $perex, array $categories, string $author, string $content, string $image, int $public)
 {
-    $sql = "INSERT INTO article (title, perex, author_id, text, created_at, public) VALUES (:name, :perex, :author, :content, NOW(), :public)";
+    $sql = "INSERT INTO article (title, perex, author_id, text, created_at, public, image) VALUES (:name, :perex, :author, :content, NOW(), :public, :image)";
     $data = [
     "name" => $name,
     "perex" => $perex,
     "author" => $author,
     "content" => $content,
+    "image" => $image,
     "public" => $public,
     ];
     $id = insert($sql, $data);
@@ -196,15 +197,16 @@ function insertArticleCategories(int $articleId, array $categories)
     }
 }
 
-function updateArticle(int $articleId, string $name, string $perex, array $categories, string $author, string $content, int $public)
+function updateArticle(int $articleId, string $name, string $perex, array $categories, string $author, string $content, string $image, int $public)
 {
-    $sql = "UPDATE article SET title = :name, perex = :perex, text = :content, author_id = :author, public = :public WHERE id = :id";
+    $sql = "UPDATE article SET title = :name, perex = :perex, text = :content, author_id = :author, public = :public, image = :image WHERE id = :id";
     $data = [
     "id" => $articleId,
     "name" => $name,
     "perex" => $perex,
     "author" => $author,
     "content" => $content,
+    "image" => $image,
     "public" => $public,
     ];
     update($sql, $data);
