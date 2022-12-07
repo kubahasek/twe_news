@@ -18,6 +18,9 @@ if (isset($_GET["msg"])) {
     case "accdisabled":
         $msg = "Váš účet byl deaktivován, kontaktujte administrátora pro jeho obnovení";
         break;
+    case "accountexists":
+        $msg = "Účet s tímto emailem již existuje, přihlašte se prosím.";
+        break;
     }
 }
 if (IsSignedIn()) {

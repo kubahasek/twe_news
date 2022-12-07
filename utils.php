@@ -368,6 +368,15 @@ function login($email, $pass)
 function signUp($name, $surname, $email, $pass)
 {
     $hash = password_hash($pass, PASSWORD_BCRYPT);
+    $sql = "SELECT * FROM user WHERE email = :email";
+    $data = [
+        "email" => $email,
+    ];
+    $user = run($sql, $data);
+    if($user){
+        return header("LOCATION: /twe_news/login.php?msg=accountexists");
+        die();
+    }
 
     $sql = "INSERT INTO user (name, surname, email, password) VALUES (:name, :surname, :email, :password)";
     $data = [
