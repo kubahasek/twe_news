@@ -89,7 +89,7 @@ if (isset($_GET["id"])) {
           <div class="mt-4">
             <h1 class="text-5xl text-yellow"><?php echo $article[0]["title"] ?></h1>
             <h1 class="text-2xl text-white mt-2"><?php echo $article[0]["perex"] ?></h1>
-            <?php if (isset($_SESSION["user"]) && ($_SESSION["user"]["role"] == "admin") || $_SESSION["user"]["id"] == $article[0]["author_id"]) : ?>
+            <?php if (isset($_SESSION["user"]) && ($_SESSION["user"]["role"] == "admin") || isset($_SESSION["user"]) && $_SESSION["user"]["id"] == $article[0]["author_id"]) : ?>
               <div class="flex gap-2 mt-2">
                 <a href="/twe_news/addArticle.php?id=<?php echo $article[0]["id"] ?>" class="text-white hover:text-yellow cursor-pointer">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -106,7 +106,7 @@ if (isset($_GET["id"])) {
                 </a>
               </div>
             <?php endif; ?>
-            <p><?php echo date_format(date_create($article[0]["created_at"]), "d.m.Y H:i") ?> <a class="underline text-yellow" href="index.php?autId=<?php echo $article[0]["authorId"] ?>"><?php echo $article[0]["authorName"] ?></a></p>
+            <p class="flex gap-2"><?php echo date_format(date_create($article[0]["created_at"]), "d.m.Y H:i") ?> <a class="underline text-yellow" href="index.php?autId=<?php echo $article[0]["authorId"] ?>"><?php echo $article[0]["authorName"] ?></a><a href="/twe_news/pdfexport.php?id=<?= $article[0]["id"] ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></a></p>
             <div class="mb-5">
               <img src="<?= $article[0]["image"] ?>" />
               <?php echo $article[0]["text"] ?>
