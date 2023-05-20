@@ -1,5 +1,7 @@
 # This a school project where we got an assignment to create a PHP news site
 
+The assignment had multiple requirements which are listed below, it was our task to create a News site with administration capabilities as well as having role-based permissions.
+
 1. checkpoint
 
 - [x] - Výpis článků na hlavní stránce
